@@ -1,0 +1,98 @@
+<!--
+This file is part of MPAF.
+
+MPAF is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+MPAF is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with MPAF.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>MPAF</title>
+<link rel="stylesheet" type="text/css" href="main.css" />
+</head>
+<body>
+<script src="jquery.js"></script>
+<script src="jquery.cookie.js"></script>
+<script src="ajax.js"></script>
+<script src="helper.js"></script>
+<script>
+function onHashChanged(event) {
+	// Remove leading #
+	var hash = location.hash.substring(1);
+	// Hide all other content switches
+	$(".cswitch").hide();
+	// Show the one switched to
+	$("#"+hash).show();
+}
+$(document).ready(function(){
+	$("#debug").load("debug.html");
+	$("#login").load("login.html");
+	$("#logout").load("logout.html");
+	$("#home").load("home.html");
+	$("#server_details").load("server_details.html");
+	$("#user_create").load("usercreate.html");
+	
+	checkLoginStatus();
+	loadServerDetails();
+});
+window.onhashchange = onHashChanged;
+</script>
+
+	<div class="header">
+
+		<div id="header">
+			<div id="title">
+			    <h1> &#x2591; MPAF</h1>
+			</div>
+			<div id="leftcolumn">
+				<nav class="menu">
+					<ul>
+						<li><a href="#home">HOME</a></li>
+						<li><a href="#server_details">SERVER DETAILS</a></li>
+						<li><a href="#user_create" class="loggedin">CREATE USER</a></li>
+						<li><a href="">NYI</a></li>
+					</ul>
+				</nav>
+			</div>
+		</div>
+		<div class="admin-panel">
+		</div>
+
+	</div >
+				<div id="login" class="loggedout"></div>
+		<div id="logout" class="loggedin"></div>
+
+	<!--content-->
+		<div id="wrapper" >
+
+		<div id="cwrapper">
+			<div id="home" class="cswitch">HOME</div>
+			<div id="server_details" class="cswitch">SERVER DETAILS</div>
+			<div id="user_create" class="cswitch">USER CREATE</div>
+		</div>
+		<div id="rightcolumn">
+			<!-- <p>Right Column</p> -->
+		</div>
+		<div id="footer">
+			<p>amkoi ist toll, bawki hat aber die besseren Super-Kuh-Kräfte</p>
+		</div>
+		<div id="debug">DOCUMENT LOADING</div>
+	</div>
+	<!--/content-->
+	<div class="footer">
+
+	</div>
+
+</body>
+</html>

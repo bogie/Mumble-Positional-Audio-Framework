@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="generated"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk7"/>
+	<classpathentry exported="true" kind="lib" path="lib/jetty/jetty-server-8.1.4.v20120524.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/mumblepaf/lib/jetty/jetty-javadoc.zip!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry exported="true" kind="lib" path="lib/jetty/jetty-util-8.1.4.v20120524.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/mumblepaf/lib/jetty/jetty-javadoc.zip!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry exported="true" kind="lib" path="lib/jetty/jetty-websocket-8.1.4.v20120524.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/mumblepaf/lib/jetty/jetty-javadoc.zip!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry exported="true" kind="lib" path="lib/jetty/servlet-api-3.0.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/mumblepaf/lib/jetty/jetty-javadoc.zip!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry exported="true" kind="lib" path="lib/jetty/jsp/com.sun.el-2.2.0.v201108011116.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/mumblepaf/lib/jetty/jetty-javadoc.zip!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry exported="true" kind="lib" path="lib/jetty/jsp/javax.el-2.2.0.v201108011116.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/mumblepaf/lib/jetty/jetty-javadoc.zip!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry exported="true" kind="lib" path="lib/jetty/jsp/javax.servlet.jsp-2.2.0.v201112011158.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/mumblepaf/lib/jetty/jetty-javadoc.zip!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry exported="true" kind="lib" path="lib/jetty/jsp/javax.servlet.jsp.jstl-1.2.0.v201105211821.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/mumblepaf/lib/jetty/jetty-javadoc.zip!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry exported="true" kind="lib" path="lib/jetty/jsp/org.apache.jasper.glassfish-2.2.2.v201112011158.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/mumblepaf/lib/jetty/jetty-javadoc.zip!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry exported="true" kind="lib" path="lib/jetty/jsp/org.apache.taglibs.standard.glassfish-1.2.0.v201112081803.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/mumblepaf/lib/jetty/jetty-javadoc.zip!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry exported="true" kind="lib" path="lib/jetty/jsp/org.eclipse.jdt.core-3.7.1.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/mumblepaf/lib/jetty/jetty-javadoc.zip!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry exported="true" kind="lib" path="lib/jetty/jetty-http-8.1.4.v20120524.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/mumblepaf/lib/jetty/jetty-javadoc.zip!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry exported="true" kind="lib" path="lib/jetty/jetty-io-8.1.4.v20120524.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/mumblepaf/lib/jetty/jetty-javadoc.zip!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry exported="true" kind="lib" path="lib/jetty/jetty-continuation-8.1.4.v20120524.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/mumblepaf/lib/jetty/jetty-javadoc.zip!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry exported="true" kind="lib" path="lib/jetty/jetty-webapp-8.1.4.v20120524.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/mumblepaf/lib/jetty/jetty-javadoc.zip!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry exported="true" kind="lib" path="lib/jetty/jetty-servlet-8.1.4.v20120524.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/mumblepaf/lib/jetty/jetty-javadoc.zip!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry exported="true" kind="lib" path="lib/jetty/jetty-security-8.1.4.v20120524.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/mumblepaf/lib/jetty/jetty-javadoc.zip!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry exported="true" kind="lib" path="lib/jetty/jetty-xml-8.1.4.v20120524.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/mumblepaf/lib/jetty/jetty-javadoc.zip!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry exported="true" kind="lib" path="C:/Program Files (x86)/ZeroC/Ice-3.4.2/lib/Ice.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/gson/gson-2.2.1.jar" sourcepath="lib/gson/gson-2.2.1-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/mumble-pa-framework/lib/google-gson-2.2.1/gson-2.2.1-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry exported="true" kind="con" path="com.zeroc.Slice2JavaPlugin.ICE_FRAMEWORK"/>
+	<classpathentry exported="true" kind="lib" path="lib/commons-configuration-1.8/commons-configuration-1.8.jar" sourcepath="lib/commons-configuration-1.8/commons-configuration-1.8-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/mumble-pa-framework/lib/commons-configuration-1.8/commons-configuration-1.8-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/commons-collections-3.2.1/commons-collections-3.2.1.jar"/>
+	<classpathentry kind="lib" path="lib/commons-logging-1.1.1/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/commons-lang-2.6/commons-lang-2.6.jar"/>
+	<classpathentry kind="lib" path="lib/xerial-sqlite/sqlite-jdbc-3.7.2.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/mpaf/lib/xerial-sqlite/sqlite-jdbc-3.7.2-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
