@@ -25,18 +25,18 @@ along with MPAF.  If not, see <http://www.gnu.org/licenses/>.]]></copyright>
 	<header contentId="org.eclipse.pde.productFile" excluded="true" />
 	<header contentId="org.eclipse.jst.j2ee.appclientDD" excluded="true" />
 	<header contentId="org.eclipse.ant.core.antBuildFile" excluded="true" />
+	<header contentId="org.eclipse.pde.simpleCheatSheet" excluded="true" />
 	<header contentId="org.eclipse.core.runtime.xml" postBlankLines="0" lineFormat="false" preserveFirstLine="true">
 		<beginLine><![CDATA[<!--]]></beginLine>
 		<linePrefix><![CDATA[  ]]></linePrefix>
 		<endLine><![CDATA[-->]]></endLine>
 		<firstLinePattern><![CDATA[<\?xml version=.*\?>]]></firstLinePattern>
 	</header>
-	<header contentId="org.eclipse.pde.simpleCheatSheet" excluded="true" />
 	<header contentId="org.eclipse.jst.j2ee.webDD" excluded="true" />
 	<header contentId="org.eclipse.pde.compositeCheatSheet" excluded="true" />
 	<header contentId="org.eclipse.pde.schema" excluded="true" />
-	<header contentId="org.eclipse.jst.j2ee.earDD" excluded="true" />
 	<header contentId="org.eclipse.pde.tocFile" excluded="true" />
+	<header contentId="org.eclipse.jst.j2ee.earDD" excluded="true" />
 	<header contentId="org.eclipse.pde.ctxHelpFile" excluded="true" />
 	<header contentId="org.eclipse.pde.categoryManifest" excluded="true" />
 	<header contentId="org.eclipse.jdt.core.JARManifest" excluded="true" />
@@ -59,9 +59,19 @@ along with MPAF.  If not, see <http://www.gnu.org/licenses/>.]]></copyright>
 	</header>
 	<header contentId="org.eclipse.jst.j2ee.ejbDD" excluded="true" />
 	<header contentId="org.eclipse.pde.featureManifest" excluded="true" />
+	<header contentId="org.eclipse.wst.css.core.csssource" postBlankLines="0" lineFormat="false" preserveFirstLine="false">
+		<beginLine><![CDATA[/*******************************************************************************]]></beginLine>
+		<linePrefix><![CDATA[*]]></linePrefix>
+		<endLine><![CDATA[ ******************************************************************************/]]></endLine>
+	</header>
 	<header contentId="org.eclipse.jdt.core.javaSource" postBlankLines="0" lineFormat="false" preserveFirstLine="false">
 		<beginLine><![CDATA[/*******************************************************************************]]></beginLine>
 		<linePrefix><![CDATA[ * ]]></linePrefix>
+		<endLine><![CDATA[ ******************************************************************************/]]></endLine>
+	</header>
+	<header contentId="org.eclipse.wst.jsdt.core.jsSource" postBlankLines="0" lineFormat="false" preserveFirstLine="false">
+		<beginLine><![CDATA[/*******************************************************************************]]></beginLine>
+		<linePrefix><![CDATA[*]]></linePrefix>
 		<endLine><![CDATA[ ******************************************************************************/]]></endLine>
 	</header>
 </project>
