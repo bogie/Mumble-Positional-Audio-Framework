@@ -17,15 +17,9 @@ along with MPAF.  If not, see <http://www.gnu.org/licenses/>.
 Server Details!
 <button id="serverdetails_button" type="button" onclick="loadServerDetails()">Refresh</button>
 <div id="serverdetails_result" style="display:none">RESULT</div>
-<table id="serverdetails_servers" border="1">
-	<thead>
-	<tr>
-		<th>ID</th>
-		<th>Registername</th>
-		<th>Port</th>
-		<th>Bandwidth (b/s)</th>
-	</tr>
-	</thead>
-	<tbody id="serverdetails_servertable">
-	</tbody>
-</table>
+<div id="serverdetails_serverlist">
+	<div id="serverdetails_serverlist_header">
+		ID  Registername  Port  Bandwidth (b/s)
+	</div>
+	<div id="serverdetails_serverlist_body"></div>
+</div>

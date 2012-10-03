@@ -153,14 +153,14 @@ function loadServerDetails() {
 function onServerDetailsResponse(data) {
 	var resultbox = $("#serverdetails_result");
 	resultbox.removeClass("errorbox successbox");
-	$("#serverdetails_servertable tr").remove();
+	$("#serverdetails_serverlist_body div").remove();
 	// For each server add all the JSON data we receive
 	$.each(data.servers,function(index, item) {
-		$("<tr>").attr("id","serverdetails_server"+index).appendTo("#serverdetails_servertable");
-		$("<td>").text(data.servers[index].id).appendTo("#serverdetails_server"+index);
-		$("<td>").text(data.servers[index].registername).appendTo("#serverdetails_server"+index);
-		$("<td>").text(data.servers[index].port).appendTo("#serverdetails_server"+index);
-		$("<td>").text(data.servers[index].bandwidth).appendTo("#serverdetails_server"+index);
+		$("<div>").attr("id","serverdetails_serverlist_body_server"+index).appendTo("#serverdetails_serverlist_body");
+		$("<div>").text(data.servers[index].id).appendTo("#serverdetails_serverlist_body_server"+index);
+		$("<div>").text(data.servers[index].registername).appendTo("#serverdetails_serverlist_body_server"+index);
+		$("<div>").text(data.servers[index].port).appendTo("#serverdetails_serverlist_body_server"+index);
+		$("<div>").text(data.servers[index].bandwidth).appendTo("#serverdetails_serverlist_body_server"+index);
 	});
 	resultbox.text("Refreshed...");
 	resultbox.addClass("successbox");
