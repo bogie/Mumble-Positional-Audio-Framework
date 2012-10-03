@@ -253,13 +253,13 @@ function updateUserInfo() {
 }
 
 function fetchHTML() {
-	$("#debug").load("debug.html");
-	$("#login").load("login.html");
-	$("#logout").load("logout.html");
-	$("#home").load("home.html");
-	$("#serverdetails").load("serverdetails.html");
-	$("#usercreate").load("usercreate.html");
-	$("#usermanage").load("usermanage.html");
+	$("#_debug").load("debug.html");
+	$("#_login").load("login.html");
+	$("#_logout").load("logout.html");
+	$("#_home").load("home.html");
+	$("#_serverdetails").load("serverdetails.html");
+	$("#_usercreate").load("usercreate.html");
+	$("#_usermanage").load("usermanage.html");
 }
 
 function loadPage(event) {
@@ -276,7 +276,7 @@ function onHashChanged(event) {
 	// Hide all other content switches
 	$(".cswitch").hide();
 	// Show the one switched to
-	$("#"+hash).show();
+	$("#_"+hash).show();
 }
 
 function removeCookie() {
