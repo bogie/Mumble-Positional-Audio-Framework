@@ -34,7 +34,7 @@
         <copy file="lib/jetty/jetty-servlet-8.1.4.v20120524.jar" todir="build/mpaf_lib"/>
         <copy file="lib/jetty/jetty-security-8.1.4.v20120524.jar" todir="build/mpaf_lib"/>
         <copy file="lib/jetty/jetty-xml-8.1.4.v20120524.jar" todir="build/mpaf_lib"/>
-        <copy file="C:/Program Files (x86)/ZeroC/Ice-3.4.2/lib/Ice.jar" todir="build/mpaf_lib"/>
+        <copy file="lib/zeroc-ice-3.4.2/Ice.jar" todir="build/mpaf_lib"/>
         <copy file="lib/gson/gson-2.2.1.jar" todir="build/mpaf_lib"/>
         <copy file="lib/commons-configuration-1.8/commons-configuration-1.8.jar" todir="build/mpaf_lib"/>
         <copy file="lib/commons-collections-3.2.1/commons-collections-3.2.1.jar" todir="build/mpaf_lib"/>

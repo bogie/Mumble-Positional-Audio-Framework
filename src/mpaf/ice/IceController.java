@@ -16,8 +16,6 @@
  ******************************************************************************/
 package mpaf.ice;
 
-import java.util.HashMap;
-
 import mpaf.Logger;
 import mpaf.ServerConfig;
 import Ice.InitializationData;
@@ -28,11 +26,9 @@ import Murmur.ServerBootedException;
 
 public class IceController {
 	private IceModel im;
-	private HashMap<Integer,Murmur.ServerCallbackPrx> callbacks;
 
 	public IceController(IceModel im) {
 		this.im = im;
-		this.callbacks = new HashMap<Integer,Murmur.ServerCallbackPrx>();
 		initialize();
 	}
 
@@ -76,14 +72,14 @@ public class IceController {
 			for (Murmur.ServerPrx server : servers) {
 				ServerConfig sc = new ServerConfig(server, im.getMeta()
 						.getDefaultConf());
-				ServerCallbackI cb = new ServerCallbackI(server);
+				ServerCallbackI cb = new ServerCallbackI(server, im);
 				sc.setCallback(cb);
 				im.getServers().put(server.id(), sc);
 
 				Murmur.ServerCallbackPrx cbPrx = Murmur.ServerCallbackPrxHelper
 						.uncheckedCast(adapter.addWithUUID(cb));
 				server.addCallback(cbPrx);
-				callbacks.put(server.id(), cbPrx);
+				im.getCallbacks().put(server.id(), cbPrx);
 			}
 		} catch (InvalidSecretException e) {
 			// TODO Auto-generated catch block
@@ -102,7 +98,7 @@ public class IceController {
 		try {
 			servers = im.getMeta().getBootedServers();
 			for (Murmur.ServerPrx server : servers) {
-				Murmur.ServerCallbackPrx cb = callbacks.get(server.id());
+				Murmur.ServerCallbackPrx cb = im.getCallbacks().get(server.id());
 				if(cb != null)
 				{
 					server.removeCallback(cb);

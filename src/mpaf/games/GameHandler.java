@@ -53,16 +53,28 @@ public interface GameHandler {
 	
 	/**
 	 * Used to find the appropriate super channel for the games name
-	 * @return Channel Tree for super channel game name
+	 * @return Channel Tree for super channel game name or null if inexistant
 	 */
-	public Tree getGameTree() throws InvalidSecretException, ServerBootedException;
+	public Tree updateGameTree() throws InvalidSecretException, ServerBootedException;
+	
+	/**
+	 * Used to define a game channel, e.g. via the web interface
+	 * Updates the gameTree and deletes the old game channel(except channelId=0)
+	 * @param channelId
+	 * @throws ServerBootedException 
+	 * @throws InvalidSecretException 
+	 * @throws InvalidChannelException 
+	 */
+	public void setGameChannel(int channelId) throws InvalidSecretException, ServerBootedException, InvalidChannelException;
 	
 	/**
 	 * Used to check if the user is in the game channel, or in one of the sub channels(server/team/squad)
 	 * @return true if user is in the game channel or below
 	 * @return false if not
+	 * @throws ServerBootedException 
+	 * @throws InvalidSecretException 
 	 */
-	public boolean isUserInGameChannel(User state);
+	public boolean isUserInGameChannel(User state) throws InvalidSecretException, ServerBootedException;
 	
 	/**
 	 * Used to add an ACL to an existing acl list by channel id

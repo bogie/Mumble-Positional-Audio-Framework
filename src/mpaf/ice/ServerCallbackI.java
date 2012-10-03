@@ -16,11 +16,7 @@
  ******************************************************************************/
 package mpaf.ice;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import mpaf.Logger;
-import mpaf.games.Battlefield3Handler;
 import mpaf.games.GameHandler;
 import Ice.Current;
 import Murmur.Channel;
@@ -34,12 +30,12 @@ public class ServerCallbackI extends Murmur._ServerCallbackDisp {
 	private static final long serialVersionUID = -666110379922768625L;
 
 	Murmur.ServerPrx server;
+	IceModel im;
 
-	public ServerCallbackI(Murmur.ServerPrx server) {
+	public ServerCallbackI(Murmur.ServerPrx server,IceModel im) {
 		this.server = server;
+		this.im = im;
 	}
-
-	Map<String, GameHandler> handlers = new HashMap<String, GameHandler>();
 
 	@Override
 	public void userConnected(User state, Current __current) {
@@ -62,9 +58,9 @@ public class ServerCallbackI extends Murmur._ServerCallbackDisp {
 			// split context with null terminated character
 			String[] splitcontext = state.context.split("\0");
 			if (splitcontext.length < 1) {
-				for (GameHandler handler : handlers.values()) {
+				for (GameHandler handler : im.getHandlers().values()) {
 					if (handler.isUserInGameChannel(state)) {
-						state.channel = handler.getGameTree().c.id;
+						state.channel = handler.updateGameTree().c.id;
 						server.setState(state);
 						return;
 					}
@@ -76,10 +72,11 @@ public class ServerCallbackI extends Murmur._ServerCallbackDisp {
 			String gamename = splitcontext[0];
 			Logger.debug(this.getClass(), gamename);
 			// Get GameHandler from HashMap
-			GameHandler handler = handlers.get(gamename);
+			GameHandler handler = im.getHandlers().get(gamename);
 
 			// Check if GameHandler exists
 			if (handler == null) {
+				/*
 				// Create a new GameHandler for BF3
 				Logger.debug(this.getClass(), "Creating new GameHandler");
 				if (gamename.equalsIgnoreCase("Battlefield 3")) {
@@ -95,9 +92,10 @@ public class ServerCallbackI extends Murmur._ServerCallbackDisp {
 					Logger.debug(this.getClass(),
 							"tried to create GameHandler for unsupported game");
 					return;
-				}
+				}*/
+				return;
 			}
-			Logger.debug(this.getClass(), "There are " + handlers.size()
+			Logger.debug(this.getClass(), "There are " + im.getHandlers().size()
 					+ " handlers now.");
 			// execute GameHandler.handle(User state)
 			Logger.debug(this.getClass(), "started handling UserState");

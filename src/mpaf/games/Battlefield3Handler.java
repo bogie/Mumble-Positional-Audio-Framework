@@ -38,17 +38,13 @@ import Murmur.User;
 
 import com.google.gson.Gson;
 
-public class Battlefield3Handler implements GameHandler {
-
-	Murmur.ServerPrx server;
-	int game_channel_id = 0;
-	Tree gameTree = null;
+public class Battlefield3Handler extends DefaultHandler {
 	HashMap<Integer, String> squadNames = new HashMap<Integer, String>();
 
 	public Battlefield3Handler(Murmur.ServerPrx server)
 			throws InvalidSecretException, ServerBootedException {
 		this.server = server;
-		this.gameTree = getGameTree();
+		this.gameTree = updateGameTree();
 
 		// BF3 uses NATO Alphabet
 
@@ -89,7 +85,11 @@ public class Battlefield3Handler implements GameHandler {
 		Logger.debug(this.getClass(), "Handling UserStateChanged for BF3");
 		Logger.debug(this.getClass(), state.name);
 
-		this.gameTree = getGameTree();
+		this.gameTree = updateGameTree();
+		if(this.gameTree == null) {
+			Logger.debug(this.getClass(), "Game channel could not be found, please create and define a game channel via the web interface.");
+			return;
+		}
 
 		if (!isUserInGameChannel(state)) {
 			Logger.debug(this.getClass(),
@@ -131,7 +131,7 @@ public class Battlefield3Handler implements GameHandler {
 	public boolean moveUser(User state, ContextJson context, IdentityJson ijson)
 			throws InvalidSecretException, ServerBootedException {
 		try {
-			this.gameTree = getGameTree();
+			this.gameTree = updateGameTree();
 			for (Tree t : this.gameTree.children) {
 				Logger.debug(
 						this.getClass(),
@@ -257,67 +257,6 @@ public class Battlefield3Handler implements GameHandler {
 		}
 		return false;
 
-	}
-
-	@Override
-	public Tree getGameTree() throws InvalidSecretException,
-			ServerBootedException {
-		// TODO: make the super channel name configurable
-		Tree stree = server.getTree();
-		Tree gTree = null;
-		for (Tree t : stree.children) {
-			if (t.c.name.equals("Battlefield 3")) {
-				Logger.debug(this.getClass(),
-						"Found game_channel for Battlefield 3");
-				game_channel_id = t.c.id;
-				gTree = t;
-			}
-		}
-		if (gTree == null) {
-			Logger.debug(this.getClass(),
-					"Could not find game_channel for Battlefield 3, creating new one");
-			try {
-				game_channel_id = server.addChannel("Battlefield 3", 0);
-			} catch (InvalidChannelException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			for (Tree t : stree.children) {
-				if (t.c.name.equals("Battlefield 3")) {
-					Logger.debug(this.getClass(),
-							"Found game_channel for Battlefield 3");
-					game_channel_id = t.c.id;
-					gTree = t;
-				}
-			}
-		}
-		return gTree;
-	}
-
-	@Override
-	public boolean isUserInGameChannel(User state) {
-		int currentChannel = state.channel;
-		if (this.gameTree.c.id == currentChannel)
-			return true;
-		if (this.gameTree.children == null)
-			return false;
-		for (Tree t : this.gameTree.children) {
-			if (t.c.id == currentChannel)
-				return true;
-			if (t.children == null)
-				return false;
-			for (Tree tc : t.children) {
-				if (tc.c.id == currentChannel)
-					return true;
-				if (tc.children == null)
-					return false;
-				for (Tree tct : tc.children) {
-					if (tct.c.id == currentChannel)
-						return true;
-				}
-			}
-		}
-		return false;
 	}
 
 	@Override
