@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <!--
 This file is part of MPAF.
 
@@ -14,7 +15,6 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with MPAF.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -32,8 +32,8 @@ $(document).ready(function(){
 	$("#login").load("login.html");
 	$("#logout").load("logout.html");
 	$("#home").load("home.html");
-	$("#server_details").load("server_details.html");
-	$("#user_create").load("usercreate.html");
+	$("#serverdetails").load("serverdetails.html");
+	$("#usercreate").load("usercreate.html");
 });
 window.onload = loadPage;
 window.onhashchange = onHashChanged;
@@ -48,8 +48,8 @@ window.onhashchange = onHashChanged;
 					<nav class="menu">
 						<ul>
 							<li><a href="#home">HOME</a></li>
-							<li><a href="#server_details">SERVER DETAILS</a></li>
-							<li><a href="#server_details">INFO</a></li>
+							<li><a href="#serverdetails">SERVER DETAILS</a></li>
+							<li><a href="#serverdetails">INFO</a></li>
 						</ul>
 					</nav>
 				</div>
@@ -61,15 +61,15 @@ window.onhashchange = onHashChanged;
 			<nav class="menu">
 				<ul>
 					<li><a href="#home">Settings</a></li>
-					<li><a href="#server_details">Create User</a></li>
-					<li><a href="#user_create" class="loggedin">createuser</a></li>
+					<li><a href="#serverdetails">Create User</a></li>
+					<li><a href="#usercreate" class="loggedin">createuser</a></li>
 				</ul>
 			</nav>
 		</div>
 		<!--/TODO: AdminPanel nur sichtbar wenn eingeloggt-->
 
-		<div id="login" class="loggedout"></div>
-		<div id="logout" class="loggedin"></div>
+		<div id="login" class="loggedout">LOGIN</div>
+		<div id="logout" class="loggedin">LOGOUT</div>
 
 		<!--content-->
 		<div class="window-div">
@@ -77,8 +77,8 @@ window.onhashchange = onHashChanged;
 			<div id="wrapper" >
 				<div id="cwrapper">
 					<div id="home" class="cswitch">HOME</div>
-					<div id="server_details" class="cswitch">SERVER DETAILS</div>
-					<div id="user_create" class="cswitch">USER CREATE</div>
+					<div id="serverdetails" class="cswitch">SERVER DETAILS</div>
+					<div id="usercreate" class="cswitch">USER CREATE</div>
 				</div>
 			</div>
 

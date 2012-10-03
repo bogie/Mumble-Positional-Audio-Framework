@@ -16,16 +16,21 @@
  ******************************************************************************/
 function makeGenericCallback(callback) {
 	return function(data) {
-		if(data.success) {
+		// If there is no data.success field or it is true, nothing needs to be done
+		if(data.success == undefined || data.success) {
 			callback(data);
-		}
-		switch (data.errorcode) {
+		} else {
+			// If there was an error
+			switch (data.errorcode) {
+			// If the error was that we are not logged in, log us out
 			case ErrorCode.RIGHT_NOT_LOGGED_IN:
 				forceLogout();
 			break;
+			// Otherwise just call the callback
 			default:
 				callback(data);
 			break;
+			}
 		}
 	}
 }
@@ -54,18 +59,24 @@ function doLogin() {
 }
 
 function onLoginResponse(data) {
+	var resultbox = $("#login_result");
+	resultbox.removeClass("errorbox successbox");
 	if(data.success) {
 		loginSwitch(true);
+		resultbox.text("Login successfull!");
+		resultbox.addClass("successbox");
 	} else {
+		resultbox.addClass("errorbox");
 		switch(data.errorcode) {
 			case ErrorCode.LOGIN_WRONG_CREDENTIALS:
-				$("#debug").append("<br />Login: Failed wrong credentials");
+				resultbox.text("Login failed: Wrong credentials");
 			break;
 			default:
-				$("#debug").append("<br />Login: Received unhandled error "+data.errorcode);
+				resultbox.text("Unknown error number "+data.errorcode);
 			break;
 		}
 	}
+	resultbox.fadeIn().delay(1000).fadeOut();
 }
 
 function doLogout() {
@@ -73,40 +84,50 @@ function doLogout() {
 }
 
 function onLogoutResponse(data) {
+	var resultbox = $("#logout_result");
+	resultbox.removeClass("errorbox successbox");
 	if(data.success) {
 		forceLogout();
+		resultbox.text("Logout successfull!");
+		resultbox.addClass("successbox");
 	} else {
 		switch(data.errorcode) {
 			default:
-				$("#debug").append("<br />Login: Received unhandled error "+data.errorcode);
+				resultbox.text("Logout: Received unhandled error number "+data.errorcode);
 			break;
 		}
 	}
+	resultbox.fadeIn().delay(1000).fadeOut();
 }
 
 function doCreate() {
-	var user = $("#create_user").val();
-	var pass = $("#create_pass").val();
-	var email = $("#create_email").val();
-	var permlvl = $("#create_permlvl").val();
+	var user = $("#usercreate_user").val();
+	var pass = $("#usercreate_pass").val();
+	var email = $("#usercreate_email").val();
+	var permlvl = $("#usercreate_permlvl").val();
 	$.post("/usercreate", {create_name: user, create_pass: pass, create_email: email, create_permlvl: permlvl},makeGenericCallback(onCreateResponse));
 }
 function onCreateResponse(data) {
+	var resultbox = $("#usercreate_result");
+	resultbox.removeClass("errorbox successbox");
 	if(data.success) {
-		$("#debug").append("<br />User created!");
+		resultbox.text("Created successfully");
+		resultbox.addClass("successbox");
 	} else {
+		resultbox.addClass("errorbox");
 		switch(data.errorcode) {
 			case ErrorCode.CREATE_INVALID_CREDENTIALS:
-				$("#debug").append("<br />UserCreate: Invalid credentials");
+				resultbox.text("Invalid credentials!");
 			break;
 			case ErrorCode.CREATE_NAME_TAKEN:
-				$("#debug").append("<br />UserCreate: Name already taken");
+				resultbox.text("Name taken!");
 			break;
 			default:
-				$("#debug").append("<br />UserCreate: Received unhandled error "+data.errorcode);
+				resultbox.text("Unknown error number "+data.errorcode);
 			break;
 		}
 	}
+	resultbox.fadeIn().delay(1000).fadeOut();
 }
 
 function loadServerDetails() {
@@ -114,13 +135,13 @@ function loadServerDetails() {
 }
 
 function onServerDetailsResponse(data) {
-	$("#servertable tr").remove();
+	$("#serverdetails_servertable tr").remove();
 	// For each server add all the JSON data we receive
 	$.each(data.servers,function(index, item) {
-		$("<tr>").attr("id","server"+index).appendTo("#servertable");
-		$("<td>").text(data.servers[index].id).appendTo("#server"+index);
-		$("<td>").text(data.servers[index].registername).appendTo("#server"+index);
-		$("<td>").text(data.servers[index].port).appendTo("#server"+index);
-		$("<td>").text(data.servers[index].bandwidth).appendTo("#server"+index);
+		$("<tr>").attr("id","serverdetails_server"+index).appendTo("#serverdetails_servertable");
+		$("<td>").text(data.servers[index].id).appendTo("#serverdetails_server"+index);
+		$("<td>").text(data.servers[index].registername).appendTo("#serverdetails_server"+index);
+		$("<td>").text(data.servers[index].port).appendTo("#serverdetails_server"+index);
+		$("<td>").text(data.servers[index].bandwidth).appendTo("#serverdetails_server"+index);
 	});
 }

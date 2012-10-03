@@ -18,16 +18,17 @@ package mpaf.ice;
 
 import java.util.HashMap;
 
-import org.apache.commons.configuration.CompositeConfiguration;
-
 import mpaf.ServerConfig;
 
+import org.apache.commons.configuration.CompositeConfiguration;
+
 public class IceModel {
+	@SuppressWarnings("unused")
 	private CompositeConfiguration config;
 	private String secret = "eivair5G";
 	private String serverIp = "192.168.122.102";
 	private String clientIp = "192.168.122.102";
-	private String icePort =  "6502";
+	private String icePort = "6502";
 	private Ice.Communicator communicator;
 	private Murmur.MetaPrx meta;
 	private HashMap<Integer, ServerConfig> servers = new HashMap<Integer, ServerConfig>();
@@ -35,6 +36,7 @@ public class IceModel {
 	public IceModel() {
 		// just in case :P
 	}
+
 	public IceModel(CompositeConfiguration config) {
 		this.config = config;
 		secret = config.getString("ice.secret");
@@ -70,9 +72,11 @@ public class IceModel {
 	public String getIcePort() {
 		return icePort;
 	}
+
 	public void setIcePort(String icePort) {
 		this.icePort = icePort;
 	}
+
 	public Ice.Communicator getCommunicator() {
 		return communicator;
 	}

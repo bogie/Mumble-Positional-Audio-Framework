@@ -20,8 +20,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.google.gson.*;
-
 import mpaf.Logger;
 import mpaf.json.ContextJson;
 import mpaf.json.IdentityJson;
@@ -38,18 +36,22 @@ import Murmur.ServerBootedException;
 import Murmur.Tree;
 import Murmur.User;
 
+import com.google.gson.Gson;
+
 public class Battlefield3Handler implements GameHandler {
 
 	Murmur.ServerPrx server;
 	int game_channel_id = 0;
 	Tree gameTree = null;
-	HashMap<Integer,String> squadNames = new HashMap<Integer,String>();
-	public Battlefield3Handler(Murmur.ServerPrx server) throws InvalidSecretException, ServerBootedException {
+	HashMap<Integer, String> squadNames = new HashMap<Integer, String>();
+
+	public Battlefield3Handler(Murmur.ServerPrx server)
+			throws InvalidSecretException, ServerBootedException {
 		this.server = server;
 		this.gameTree = getGameTree();
-		
+
 		// BF3 uses NATO Alphabet
-		
+
 		squadNames.put(0, "No Squad");
 		squadNames.put(1, "Alpha");
 		squadNames.put(2, "Bravo");
@@ -77,89 +79,120 @@ public class Battlefield3Handler implements GameHandler {
 		squadNames.put(24, "X-Ray");
 		squadNames.put(25, "Yankee");
 		squadNames.put(26, "Zulu");
-		
+
 	}
+
 	@Override
-	public void handleUserState(User state) throws InvalidSecretException, ServerBootedException, InvalidChannelException, InvalidSessionException {
+	public void handleUserState(User state) throws InvalidSecretException,
+			ServerBootedException, InvalidChannelException,
+			InvalidSessionException {
 		Logger.debug(this.getClass(), "Handling UserStateChanged for BF3");
 		Logger.debug(this.getClass(), state.name);
-		
+
 		this.gameTree = getGameTree();
-		
-		if(!isUserInGameChannel(state)) {
-			Logger.debug(this.getClass(), "User is not in game channel or sub channel, returning");
+
+		if (!isUserInGameChannel(state)) {
+			Logger.debug(this.getClass(),
+					"User is not in game channel or sub channel, returning");
 			return;
 		}
 		String[] splitcontext = state.context.split("\0");
-		if(splitcontext.length<2) {
-			Logger.debug(this.getClass(), "Context state is missing ipport, returning");
-			
-			if(state.channel != this.gameTree.c.id)
-			{
+		if (splitcontext.length < 2) {
+			Logger.debug(this.getClass(),
+					"Context state is missing ipport, returning");
+
+			if (state.channel != this.gameTree.c.id) {
 				state.channel = this.gameTree.c.id;
 				server.setState(state);
 			}
 		} else {
 			Gson gson = new Gson();
-			Logger.debug(this.getClass(), "splitcontext[0]:"+splitcontext[0]);
-			Logger.debug(this.getClass(), "splitcontext[1]:"+splitcontext[1]);
-			ContextJson context = gson.fromJson(splitcontext[1], ContextJson.class);
-			IdentityJson ijson = gson.fromJson(state.identity, IdentityJson.class);
-			
-			if(!context.getIpport().contains(":"))
+			Logger.debug(this.getClass(), "splitcontext[0]:" + splitcontext[0]);
+			Logger.debug(this.getClass(), "splitcontext[1]:" + splitcontext[1]);
+			ContextJson context = gson.fromJson(splitcontext[1],
+					ContextJson.class);
+			IdentityJson ijson = gson.fromJson(state.identity,
+					IdentityJson.class);
+
+			if (!context.getIpport().contains(":"))
 				return;
-	
+
 			moveUser(state, context, ijson);
 		}
 	}
+
 	@Override
 	public void handleChannelRemoved(Channel state) {
 		// TODO Auto-generated method stub
-		
+
 	}
+
 	@Override
-	public boolean moveUser(User state, ContextJson context, IdentityJson ijson) throws InvalidSecretException, ServerBootedException {
+	public boolean moveUser(User state, ContextJson context, IdentityJson ijson)
+			throws InvalidSecretException, ServerBootedException {
 		try {
 			this.gameTree = getGameTree();
-			for(Tree t : this.gameTree.children) {
-				Logger.debug(this.getClass(), "Comparing context channel: "+StringUtils.getHexString(t.c.description.getBytes())+" with "+StringUtils.getHexString(context.getIpport().getBytes()));
-				if(t.c.description.equalsIgnoreCase(context.getIpport())) {
-					Logger.debug(this.getClass(), "Found context channel for context: ");
-					for(Tree tc : t.children) {
-						Logger.debug(this.getClass(), "checking tc.c.name: "+tc.c.name);
-						if(tc.c.name.equalsIgnoreCase(ijson.getTeam())) {
-							Logger.debug(this.getClass(), "Found team channel for team: "+ijson.getTeam());
+			for (Tree t : this.gameTree.children) {
+				Logger.debug(
+						this.getClass(),
+						"Comparing context channel: "
+								+ StringUtils.getHexString(t.c.description
+										.getBytes())
+								+ " with "
+								+ StringUtils.getHexString(context.getIpport()
+										.getBytes()));
+				if (t.c.description.equalsIgnoreCase(context.getIpport())) {
+					Logger.debug(this.getClass(),
+							"Found context channel for context: ");
+					for (Tree tc : t.children) {
+						Logger.debug(this.getClass(), "checking tc.c.name: "
+								+ tc.c.name);
+						if (tc.c.name.equalsIgnoreCase(ijson.getTeam())) {
+							Logger.debug(
+									this.getClass(),
+									"Found team channel for team: "
+											+ ijson.getTeam());
 							String squadname = "";
-							if(ijson.getSquad()>=0 && ijson.getSquad() <= 26)
+							if (ijson.getSquad() >= 0 && ijson.getSquad() <= 26)
 								squadname = squadNames.get(ijson.getSquad());
 							else {
-								Logger.debug(getClass(), "Got invalid squad id: "+ijson.getSquad());
+								Logger.debug(
+										getClass(),
+										"Got invalid squad id: "
+												+ ijson.getSquad());
 								squadname = "No Squad";
 							}
-							for(Tree tct : tc.children)	{
-								if(tct.c.name.equalsIgnoreCase(squadname)) {
-									Logger.debug(this.getClass(), "Found squad channel for squad: "+squadname);
-									if(state.channel == tct.c.id)
+							for (Tree tct : tc.children) {
+								if (tct.c.name.equalsIgnoreCase(squadname)) {
+									Logger.debug(this.getClass(),
+											"Found squad channel for squad: "
+													+ squadname);
+									if (state.channel == tct.c.id)
 										return true;
 									state.channel = tct.c.id;
 									server.setState(state);
 									return true;
 								}
 							}
-							Logger.debug(this.getClass(),"Could not find squad channel for squad: "+squadname);
-							
+							Logger.debug(this.getClass(),
+									"Could not find squad channel for squad: "
+											+ squadname);
+
 							// create a new channel for squad: squadname
-							int squadcid = server.addChannel(squadname, tc.c.id);
-							
-							// retrieve channel state for further use						
+							int squadcid = server
+									.addChannel(squadname, tc.c.id);
+
+							// retrieve channel state for further use
 							Channel cstate = server.getChannelState(squadcid);
-							
-							// we link all squad channels to the team channel(parent)
+
+							// we link all squad channels to the team
+							// channel(parent)
 							int links[] = new int[1];
 							links[0] = cstate.parent;
 							cstate.links = links;
 							server.setChannelState(cstate);
-							Murmur.ACL speak = new Murmur.ACL(true,true,true,-1,"~out",0,Murmur.PermissionSpeak.value);
+							Murmur.ACL speak = new Murmur.ACL(true, true, true,
+									-1, "~out", 0, Murmur.PermissionSpeak.value);
 							addACLtoChannel(squadcid, speak);
 							// switch the user to his squad channel
 							state.channel = squadcid;
@@ -167,32 +200,40 @@ public class Battlefield3Handler implements GameHandler {
 							return true;
 						}
 					}
-					Logger.debug(this.getClass(),"Could not find team channel for team: "+ijson.getTeam());
-					
+					Logger.debug(
+							this.getClass(),
+							"Could not find team channel for team: "
+									+ ijson.getTeam());
+
 					// create a new channel for team: ijson.getTeam()
+					@SuppressWarnings("unused")
 					int teamcid = server.addChannel(ijson.getTeam(), t.c.id);
-					
+
 					// restart the loop
 					moveUser(state, context, ijson);
 					return false;
 				}
 			}
-			Logger.debug(this.getClass(),"Could not find context channel for context: "+context.getIpport());
+			Logger.debug(
+					this.getClass(),
+					"Could not find context channel for context: "
+							+ context.getIpport());
 			// TODO: make a list of servers with context reference
-			
+
 			// create a new channel for server(context): context.getIpport()
 			// TODO: find a pointer for the server name
-			int contextcid = server.addChannel(context.getIpport(), game_channel_id);
-			
+			int contextcid = server.addChannel(context.getIpport(),
+					game_channel_id);
+
 			// retrieve channel state
 			Channel c = server.getChannelState(contextcid);
-			
+
 			// set the description to the ipport string, we search for this
 			c.description = context.getIpport();
-			
+
 			// set channel state
 			server.setChannelState(c);
-			
+
 			// set the necessary ACL, so people can't move,link etc. themselves
 			// 1252 = ENTER | MOVE | MAKE | LINK | MAKE_T
 			int mask = Murmur.PermissionEnter.value;
@@ -200,9 +241,10 @@ public class Battlefield3Handler implements GameHandler {
 			mask += Murmur.PermissionMakeChannel.value;
 			mask += Murmur.PermissionMakeTempChannel.value;
 			mask += Murmur.PermissionMove.value;
-			Murmur.ACL acl = new Murmur.ACL(true,true,true, -1, "all",Murmur.PermissionSpeak.value,mask);
+			Murmur.ACL acl = new Murmur.ACL(true, true, true, -1, "all",
+					Murmur.PermissionSpeak.value, mask);
 			addACLtoChannel(contextcid, acl);
-			
+
 			// restart the loop
 			moveUser(state, context, ijson);
 			return false;
@@ -214,31 +256,36 @@ public class Battlefield3Handler implements GameHandler {
 			e.printStackTrace();
 		}
 		return false;
-		
+
 	}
+
 	@Override
-	public Tree getGameTree() throws InvalidSecretException, ServerBootedException {
+	public Tree getGameTree() throws InvalidSecretException,
+			ServerBootedException {
 		// TODO: make the super channel name configurable
 		Tree stree = server.getTree();
 		Tree gTree = null;
-		for(Tree t : stree.children) {
-			if(t.c.name.equals("Battlefield 3")) {
-				Logger.debug(this.getClass(), "Found game_channel for Battlefield 3");
+		for (Tree t : stree.children) {
+			if (t.c.name.equals("Battlefield 3")) {
+				Logger.debug(this.getClass(),
+						"Found game_channel for Battlefield 3");
 				game_channel_id = t.c.id;
 				gTree = t;
 			}
 		}
-		if(gTree == null) {
-			Logger.debug(this.getClass(), "Could not find game_channel for Battlefield 3, creating new one");
+		if (gTree == null) {
+			Logger.debug(this.getClass(),
+					"Could not find game_channel for Battlefield 3, creating new one");
 			try {
 				game_channel_id = server.addChannel("Battlefield 3", 0);
 			} catch (InvalidChannelException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			for(Tree t : stree.children) {
-				if(t.c.name.equals("Battlefield 3")) {
-					Logger.debug(this.getClass(), "Found game_channel for Battlefield 3");
+			for (Tree t : stree.children) {
+				if (t.c.name.equals("Battlefield 3")) {
+					Logger.debug(this.getClass(),
+							"Found game_channel for Battlefield 3");
 					game_channel_id = t.c.id;
 					gTree = t;
 				}
@@ -246,54 +293,57 @@ public class Battlefield3Handler implements GameHandler {
 		}
 		return gTree;
 	}
+
 	@Override
 	public boolean isUserInGameChannel(User state) {
 		int currentChannel = state.channel;
-		if(this.gameTree.c.id == currentChannel)
+		if (this.gameTree.c.id == currentChannel)
 			return true;
-		if(this.gameTree.children == null)
+		if (this.gameTree.children == null)
 			return false;
-		for(Tree t : this.gameTree.children) {
-			if(t.c.id == currentChannel)
+		for (Tree t : this.gameTree.children) {
+			if (t.c.id == currentChannel)
 				return true;
-			if(t.children == null)
+			if (t.children == null)
 				return false;
-			for(Tree tc : t.children) {
-				if(tc.c.id == currentChannel)
+			for (Tree tc : t.children) {
+				if (tc.c.id == currentChannel)
 					return true;
-				if(tc.children == null)
+				if (tc.children == null)
 					return false;
-				for(Tree tct : tc.children) {
-					if(tct.c.id == currentChannel)
+				for (Tree tct : tc.children) {
+					if (tct.c.id == currentChannel)
 						return true;
 				}
 			}
 		}
 		return false;
 	}
+
 	@Override
-	public void addACLtoChannel(int channelid, ACL acl) throws InvalidSecretException, ServerBootedException {
+	public void addACLtoChannel(int channelid, ACL acl)
+			throws InvalidSecretException, ServerBootedException {
 		try {
 			// create variable holders
 			ACLListHolder acls = new ACLListHolder();
 			GroupListHolder groups = new GroupListHolder();
 			BooleanHolder inherited = new BooleanHolder();
-			
+
 			// fill variable holders
-			server.getACL(channelid,acls,groups,inherited);
-			
+			server.getACL(channelid, acls, groups, inherited);
+
 			// append ACL
 			ArrayList<Murmur.ACL> aclList = new ArrayList<Murmur.ACL>();
-			for(Murmur.ACL a : acls.value) {
+			for (Murmur.ACL a : acls.value) {
 				aclList.add(a);
 			}
 			aclList.add(acl);
-			server.setACL(channelid, aclList.toArray(new ACL[aclList.size()]), groups.value, inherited.value);
+			server.setACL(channelid, aclList.toArray(new ACL[aclList.size()]),
+					groups.value, inherited.value);
 		} catch (InvalidChannelException e) {
 			e.printStackTrace();
 		}
-		
-	}
 
+	}
 
 }

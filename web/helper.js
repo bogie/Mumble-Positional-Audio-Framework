@@ -62,7 +62,7 @@ function User(id, name, permlvl) {
 var user;
 
 function updateUserInfo() {
-	$("#userinfo").text("Hello "+user.name+"! Permission level: "+user.permlvl);
+	$("#logout_userinfo").text("Hello "+user.name+"! Permission level: "+user.permlvl);
 }
 
 function loadPage(event) {

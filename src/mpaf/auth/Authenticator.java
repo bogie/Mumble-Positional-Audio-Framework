@@ -16,14 +16,12 @@
  ******************************************************************************/
 package mpaf.auth;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import mpaf.sql.SqlHandler;
-
 import Murmur.InvalidCallbackException;
 import Murmur.InvalidSecretException;
 import Murmur.ServerBootedException;
@@ -41,7 +39,7 @@ public class Authenticator extends Thread {
 	private String servername = "Morsus Mihi Mumble";
 	private ServerAuthenticatorI authenticator;
 	private SqlHandler sqlH;
-	private Connection conn;
+	// private Connection conn;
 	private Murmur.MetaPrx meta;
 	private Ice.Communicator ic;
 
@@ -57,7 +55,8 @@ public class Authenticator extends Thread {
 	public void run() {
 		this.running = true;
 		if (!this.prepared) {
-			System.out.println("Authenticator: Tried to start unprepared thread. Call prepare() first. Exiting.");
+			System.out
+					.println("Authenticator: Tried to start unprepared thread. Call prepare() first. Exiting.");
 			return;
 		}
 		try {
@@ -72,7 +71,7 @@ public class Authenticator extends Thread {
 
 	public boolean init() throws SQLException {
 
-		this.conn = this.sqlH.getConnection();
+		// this.conn = this.sqlH.getConnection();
 
 		// Basic ice operations
 		ic = null;
@@ -87,16 +86,20 @@ public class Authenticator extends Thread {
 		Map<String, String> secret = new HashMap<String, String>();
 		secret.put("secret", "AeJue1oa");
 		// ic.getImplicitContext().put("secret", "AeJue1oa");
-		//Ice.ObjectPrx proxy = ic.stringToProxy("Meta:tcp -h localhost -p 6502").ice_context(secret);
-		Ice.ObjectPrx proxy = ic.stringToProxy("Meta:tcp -h 192.168.122.101 -p 6502");
+		// Ice.ObjectPrx proxy =
+		// ic.stringToProxy("Meta:tcp -h localhost -p 6502").ice_context(secret);
+		Ice.ObjectPrx proxy = ic
+				.stringToProxy("Meta:tcp -h 192.168.122.101 -p 6502");
 		System.out.println("Authenticator: Connecting via ICE");
 
 		// meta object to access servers
 		this.meta = Murmur.MetaPrxHelper.checkedCast(proxy);
 		// this adapter is used for the ServerAuthenticatorI
-		Ice.ObjectAdapter adapter = ic.createObjectAdapterWithEndpoints("Callback.Client", "tcp -h 10.8.0.4");
-		if(adapter.equals(null))
-			System.out.println("could not initiate adapter: "+adapter.getName());
+		Ice.ObjectAdapter adapter = ic.createObjectAdapterWithEndpoints(
+				"Callback.Client", "tcp -h 10.8.0.4");
+		if (adapter.equals(null))
+			System.out.println("could not initiate adapter: "
+					+ adapter.getName());
 		adapter.activate();
 		System.out.println("Authenticator: Activated local Adapter");
 
@@ -111,7 +114,7 @@ public class Authenticator extends Thread {
 			System.out.println("Authenticator: Got all Servers. "
 					+ servers.length);
 			for (int i = 0; i < servers.length; i++) {
-				if(servers[i].getConf("registerName").equals(servername)){
+				if (servers[i].getConf("registerName").equals(servername)) {
 					this.server = servers[i];
 				}
 			}
@@ -125,9 +128,11 @@ public class Authenticator extends Thread {
 			return false;
 		}
 		// starting the authenticator
-		this.authenticator = new ServerAuthenticatorI(this.server, adapter, this.sqlH);
+		this.authenticator = new ServerAuthenticatorI(this.server, adapter,
+				this.sqlH);
 		System.out.println("Authenticator: Setting Authenticator via ICE");
-		Murmur.ServerUpdatingAuthenticatorPrx auth = Murmur.ServerUpdatingAuthenticatorPrxHelper.uncheckedCast(adapter.addWithUUID(this.authenticator));
+		Murmur.ServerUpdatingAuthenticatorPrx auth = Murmur.ServerUpdatingAuthenticatorPrxHelper
+				.uncheckedCast(adapter.addWithUUID(this.authenticator));
 		try {
 			this.server.setAuthenticator(auth);
 		} catch (InvalidCallbackException e) {
@@ -144,11 +149,13 @@ public class Authenticator extends Thread {
 
 	}
 
-	public boolean setAuthenticator(){
+	public boolean setAuthenticator() {
 		// this adapter is used for the ServerAuthenticatorI
-		Ice.ObjectAdapter adapter = ic.createObjectAdapterWithEndpoints("Callback.Client", "tcp -h 127.0.0.1");
-		if(adapter.equals(null))
-			System.out.println("could not initiate adapter: "+adapter.getName());
+		Ice.ObjectAdapter adapter = ic.createObjectAdapterWithEndpoints(
+				"Callback.Client", "tcp -h 127.0.0.1");
+		if (adapter.equals(null))
+			System.out.println("could not initiate adapter: "
+					+ adapter.getName());
 		adapter.activate();
 		System.out.println("Authenticator: Activated local Adapter");
 
@@ -167,7 +174,7 @@ public class Authenticator extends Thread {
 				for (String key : confs.keySet()) {
 					System.out.println("Key: " + key + " is " + confs.get(key));
 				}
-				if(servers[i].getConf("registerName").equals(servername)){
+				if (servers[i].getConf("registerName").equals(servername)) {
 					this.server = servers[i];
 				}
 			}
@@ -181,9 +188,11 @@ public class Authenticator extends Thread {
 			return false;
 		}
 		// starting the authenticator
-		this.authenticator = new ServerAuthenticatorI(this.server, adapter, this.sqlH);
+		this.authenticator = new ServerAuthenticatorI(this.server, adapter,
+				this.sqlH);
 		System.out.println("Authenticator: Setting Authenticator via ICE");
-		Murmur.ServerUpdatingAuthenticatorPrx auth = Murmur.ServerUpdatingAuthenticatorPrxHelper.uncheckedCast(adapter.addWithUUID(this.authenticator));
+		Murmur.ServerUpdatingAuthenticatorPrx auth = Murmur.ServerUpdatingAuthenticatorPrxHelper
+				.uncheckedCast(adapter.addWithUUID(this.authenticator));
 		try {
 			this.server.setAuthenticator(auth);
 		} catch (InvalidCallbackException e) {
@@ -198,6 +207,7 @@ public class Authenticator extends Thread {
 		}
 		return true;
 	}
+
 	public String getServername() {
 		return servername;
 	}
