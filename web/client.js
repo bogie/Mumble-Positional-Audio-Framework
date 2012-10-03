@@ -158,6 +158,31 @@ function onServerDetailsResponse(data) {
 	});
 }
 
+function loadUserList(filter) {
+	if(filter != undefined) {
+		$.post("/userlist",{filter: filter},makeGenericCallback(onUserListResponse));
+	} else {
+		$.post("/userlist",makeGenericCallback(onUserListResponse));
+	}
+}
+
+function onUserListResponse(data) {
+	var resultbox = $("#usermanage_result");
+	resultbox.removeClass("errorbox successbox");
+	if(data.success != undefined) {
+		resultbox.addClass("errorbox");
+		resultbox.text("Unknown error "+data.errorcode);
+		return;
+	}
+	$("#usermanage_userlist div").remove();
+	$.each(data.users,function(index,item) {
+		$("<div>").attr("id","usermanage_user"+data.users[index].id).appendTo("#usermanage_userlist");
+		$("<input>").val(data.users[index].name).appendTo("#usermanage_user"+data.users[index].id);
+		$("<input>").val(data.users[index].email).appendTo("#usermanage_user"+data.users[index].id);
+		$("<input>").val(data.users[index].permissionlevel).appendTo("#usermanage_user"+data.users[index].id);
+	});
+}
+
 var loginState = false;
 
 var ErrorCode = {
@@ -216,12 +241,14 @@ function fetchHTML() {
 	$("#home").load("home.html");
 	$("#serverdetails").load("serverdetails.html");
 	$("#usercreate").load("usercreate.html");
+	$("#usermanage").load("usermanage.html");
 }
 
 function loadPage(event) {
 	fetchHTML();
 	checkLoginStatus();
 	loadServerDetails();
+	loadUserList();
 	onHashChanged(event);
 }
 

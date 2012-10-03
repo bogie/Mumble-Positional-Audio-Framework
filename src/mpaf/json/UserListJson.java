@@ -14,51 +14,15 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with MPAF.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package mpaf.auth;
+package mpaf.json;
 
-public class User {
+import java.util.Collection;
 
-	private int id;
-	private String name;
-	private String email;
-	private int permissionlvl;
+public class UserListJson {
+	@SuppressWarnings("unused")
+	private Collection<UserJson> users;
 
-	public User(int id, String name, String email, int permissionlvl) {
-		this.id = id;
-		this.name = name;
-		this.email = email;
-		this.permissionlvl = permissionlvl;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public int getPermissionlvl() {
-		return permissionlvl;
-	}
-
-	public void setPermissionlvl(int permissionlvl) {
-		this.permissionlvl = permissionlvl;
+	public UserListJson(Collection<UserJson> users) {
+		this.users = users;
 	}
 }

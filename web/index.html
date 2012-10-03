@@ -26,9 +26,6 @@ along with MPAF.  If not, see <http://www.gnu.org/licenses/>.
 <script src="jquery.cookie.js"></script>
 <script src="client.js"></script>
 <script>
-$(document).ready(function(){
-
-});
 window.onload = loadPage;
 window.onhashchange = onHashChanged;
 </script>
@@ -50,17 +47,15 @@ window.onhashchange = onHashChanged;
 			</div>
 		</div >
 
-		<!--TODO: AdminPanel nur sichtbar wenn eingeloggt-->
-		<div class="admin-panel">
+		<div class="admin-panel loggedin">
 			<nav class="menu">
 				<ul>
 					<li><a href="#home">Settings</a></li>
-					<li><a href="#serverdetails">Create User</a></li>
-					<li><a href="#usercreate" class="loggedin">createuser</a></li>
+					<li><a href="#usermanage">Manage User</a></li>
+					<li><a href="#usercreate">Create User</a></li>
 				</ul>
 			</nav>
 		</div>
-		<!--/TODO: AdminPanel nur sichtbar wenn eingeloggt-->
 
 		<div id="login" class="loggedout">LOGIN</div>
 		<div id="logout" class="loggedin">LOGOUT</div>
@@ -73,6 +68,7 @@ window.onhashchange = onHashChanged;
 					<div id="home" class="cswitch">HOME</div>
 					<div id="serverdetails" class="cswitch">SERVER DETAILS</div>
 					<div id="usercreate" class="cswitch">USER CREATE</div>
+					<div id="usermanage" class="cswitch">USER MANAGE</div>
 				</div>
 			</div>
 

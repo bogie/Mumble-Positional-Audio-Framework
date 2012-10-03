@@ -14,23 +14,8 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with MPAF.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <title>jsplayground</title>
-</head>
-
-<body>
-<script src="jquery.js" type="text/javascript" charset="utf-8"></script>>
-<script>
-$(document).ready(function(){
-	$("a").click(function(event){
-		alert("Thanks for visiting!");
-		event();
-	});
-});
-</script>
-<a href="jsplayground.html">LOLTEST</a>
-</body>
-</html>
+User Manage!
+<button id="usermanage_button" type="button" onclick="loadUserList()">Refresh</button>
+<div id="usermanage_result" style="display:none">RESULT</div>
+<img id="usermanage_load" src="img/loading.gif" style="display: none"/> 
+<div id="usermanage_userlist"></div>

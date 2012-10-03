@@ -24,6 +24,7 @@ import mpaf.servlets.Logout;
 import mpaf.servlets.ServerDetails;
 import mpaf.servlets.UserCreate;
 import mpaf.servlets.UserInfo;
+import mpaf.servlets.UserList;
 import mpaf.sql.SqlightHandler;
 
 import org.apache.commons.configuration.CompositeConfiguration;
@@ -96,6 +97,7 @@ public class Main {
 		servletC.addServlet(new ServletHolder(new Logout()), "/logout");
 		servletC.addServlet(new ServletHolder(new UserCreate()), "/usercreate");
 		servletC.addServlet(new ServletHolder(new UserInfo()), "/userinfo");
+		servletC.addServlet(new ServletHolder(new UserList()), "/userlist");
 
 		server.setHandler(servletC);
 		try {
