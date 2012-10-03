@@ -103,6 +103,7 @@ function checkLoginStatus() {
 
 function loginSwitch(login) {
 	loginState = login;
+	fetchUserInfo();
 	if(loginState) {
 		$(".loggedout").hide();
 		$(".loggedin").show();
