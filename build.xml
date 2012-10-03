@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_run_jar" name="Mumble Positional Audio Framework">
+    <!--this file was created by Eclipse Runnable JAR Export Wizard-->
+    <!--ANT 1.7 is required                                        -->
+    <target name="create_run_jar">
+        <jar destfile="build/mpaf.jar">
+            <manifest>
+                <attribute name="Main-Class" value="mpaf.Main"/>
+                <attribute name="Class-Path" value=". mpaf_lib/jetty-server-8.1.4.v20120524.jar mpaf_lib/jetty-util-8.1.4.v20120524.jar mpaf_lib/jetty-websocket-8.1.4.v20120524.jar mpaf_lib/servlet-api-3.0.jar mpaf_lib/com.sun.el-2.2.0.v201108011116.jar mpaf_lib/javax.el-2.2.0.v201108011116.jar mpaf_lib/javax.servlet.jsp-2.2.0.v201112011158.jar mpaf_lib/javax.servlet.jsp.jstl-1.2.0.v201105211821.jar mpaf_lib/org.apache.jasper.glassfish-2.2.2.v201112011158.jar mpaf_lib/org.apache.taglibs.standard.glassfish-1.2.0.v201112081803.jar mpaf_lib/org.eclipse.jdt.core-3.7.1.jar mpaf_lib/jetty-http-8.1.4.v20120524.jar mpaf_lib/jetty-io-8.1.4.v20120524.jar mpaf_lib/jetty-continuation-8.1.4.v20120524.jar mpaf_lib/jetty-webapp-8.1.4.v20120524.jar mpaf_lib/jetty-servlet-8.1.4.v20120524.jar mpaf_lib/jetty-security-8.1.4.v20120524.jar mpaf_lib/jetty-xml-8.1.4.v20120524.jar mpaf_lib/Ice.jar mpaf_lib/gson-2.2.1.jar mpaf_lib/commons-configuration-1.8.jar mpaf_lib/commons-collections-3.2.1.jar mpaf_lib/commons-logging-1.1.1.jar mpaf_lib/commons-lang-2.6.jar mpaf_lib/sqlite-jdbc-3.7.2.jar"/>
+            </manifest>
+            <fileset dir="bin"/>
+        </jar>
+        <delete dir="build/mpaf_lib"/>
+        <mkdir dir="build/mpaf_lib"/>
+    	<delete dir="build/web"/>
+		<copydir src="web" dest="build/web"/>
+		<copy file="mpaf.properties.default.xml" todir="build/"/>
+		<copy file="mpaf.db" todir="build/"/>
+        <copy file="lib/jetty/jetty-server-8.1.4.v20120524.jar" todir="build/mpaf_lib"/>
+        <copy file="lib/jetty/jetty-util-8.1.4.v20120524.jar" todir="build/mpaf_lib"/>
+        <copy file="lib/jetty/jetty-websocket-8.1.4.v20120524.jar" todir="build/mpaf_lib"/>
+        <copy file="lib/jetty/servlet-api-3.0.jar" todir="build/mpaf_lib"/>
+        <copy file="lib/jetty/jsp/com.sun.el-2.2.0.v201108011116.jar" todir="build/mpaf_lib"/>
+        <copy file="lib/jetty/jsp/javax.el-2.2.0.v201108011116.jar" todir="build/mpaf_lib"/>
+        <copy file="lib/jetty/jsp/javax.servlet.jsp-2.2.0.v201112011158.jar" todir="build/mpaf_lib"/>
+        <copy file="lib/jetty/jsp/javax.servlet.jsp.jstl-1.2.0.v201105211821.jar" todir="build/mpaf_lib"/>
+        <copy file="lib/jetty/jsp/org.apache.jasper.glassfish-2.2.2.v201112011158.jar" todir="build/mpaf_lib"/>
+        <copy file="lib/jetty/jsp/org.apache.taglibs.standard.glassfish-1.2.0.v201112081803.jar" todir="build/mpaf_lib"/>
+        <copy file="lib/jetty/jsp/org.eclipse.jdt.core-3.7.1.jar" todir="build/mpaf_lib"/>
+        <copy file="lib/jetty/jetty-http-8.1.4.v20120524.jar" todir="build/mpaf_lib"/>
+        <copy file="lib/jetty/jetty-io-8.1.4.v20120524.jar" todir="build/mpaf_lib"/>
+        <copy file="lib/jetty/jetty-continuation-8.1.4.v20120524.jar" todir="build/mpaf_lib"/>
+        <copy file="lib/jetty/jetty-webapp-8.1.4.v20120524.jar" todir="build/mpaf_lib"/>
+        <copy file="lib/jetty/jetty-servlet-8.1.4.v20120524.jar" todir="build/mpaf_lib"/>
+        <copy file="lib/jetty/jetty-security-8.1.4.v20120524.jar" todir="build/mpaf_lib"/>
+        <copy file="lib/jetty/jetty-xml-8.1.4.v20120524.jar" todir="build/mpaf_lib"/>
+        <copy file="C:/Program Files (x86)/ZeroC/Ice-3.4.2/lib/Ice.jar" todir="build/mpaf_lib"/>
+        <copy file="lib/gson/gson-2.2.1.jar" todir="build/mpaf_lib"/>
+        <copy file="lib/commons-configuration-1.8/commons-configuration-1.8.jar" todir="build/mpaf_lib"/>
+        <copy file="lib/commons-collections-3.2.1/commons-collections-3.2.1.jar" todir="build/mpaf_lib"/>
+        <copy file="lib/commons-logging-1.1.1/commons-logging-1.1.1.jar" todir="build/mpaf_lib"/>
+        <copy file="lib/commons-lang-2.6/commons-lang-2.6.jar" todir="build/mpaf_lib"/>
+        <copy file="lib/xerial-sqlite/sqlite-jdbc-3.7.2.jar" todir="build/mpaf_lib"/>
+    </target>
+</project>
