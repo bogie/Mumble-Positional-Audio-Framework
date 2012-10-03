@@ -37,7 +37,7 @@ function fetchUserInfo() {
 function onUserInfoResponse(data) {
 	if(data.success == undefined) {
 		user = new User(data.id, data.name, data.permissionlvl);
-		$("#debug").append("<br />Fetched User with id:"+user.id+" name:"+user.name+" permlvl:"+user.permlvl);
+		updateUserInfo();
 	} else {
 		switch(data.errorcode) {
 			default:
@@ -56,7 +56,6 @@ function doLogin() {
 function onLoginResponse(data) {
 	if(data.success) {
 		loginSwitch(true);
-		$("#debug").append("<br />Logged in!");
 	} else {
 		switch(data.errorcode) {
 			case ErrorCode.LOGIN_WRONG_CREDENTIALS:
@@ -70,14 +69,12 @@ function onLoginResponse(data) {
 }
 
 function doLogout() {
-	$("#debug").append("<br />Logout: Logging out...");
 	$.get("/logout",makeGenericCallback(onLogoutResponse));
 }
 
 function onLogoutResponse(data) {
 	if(data.success) {
 		forceLogout();
-		$("#debug").append("<br />Logged out!");
 	} else {
 		switch(data.errorcode) {
 			default:

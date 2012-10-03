@@ -61,6 +61,10 @@ function User(id, name, permlvl) {
 
 var user;
 
+function updateUserInfo() {
+	$("#userinfo").text("Hello "+user.name+"! Permission level: "+user.permlvl);
+}
+
 function loadPage(event) {
 	fetchUserInfo();
 	checkLoginStatus();
@@ -82,7 +86,6 @@ function removeCookie() {
 }
 
 function forceLogout() {
-	$("#debug").append("<br />Forcing logout...");
 	removeCookie();
 	loginSwitch(false);
 }
@@ -90,10 +93,10 @@ function forceLogout() {
 function checkLoginStatus() {
 	$("#debug").append("<br />Checking login status...");
 	if($.cookie("JSESSIONID") != null) {
-		$("#debug").append("<br />Cookie found!");
+		$("#debug").append("<br />Logged in");
 		loginSwitch(true);
 	} else {
-		$("#debug").append("<br />No cookie found");
+		$("#debug").append("<br />Not logged in");
 		loginSwitch(false);
 	}
 }
