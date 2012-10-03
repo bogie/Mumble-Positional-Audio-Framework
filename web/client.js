@@ -14,6 +14,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with MPAF.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
+var RESULTBOX_FADE_DELAY = 1000;
+
 function makeGenericCallback(callback) {
 	return function(data) {
 		// If there is no data.success field or it is true, nothing needs to be done
@@ -80,7 +82,7 @@ function onLoginResponse(data) {
 	}
 	$("#login_button").removeAttr("disabled");
 	$("#login_load").hide();
-	resultbox.fadeIn().delay(1000).fadeOut();
+	resultbox.fadeIn().delay(RESULTBOX_FADE_DELAY).fadeOut();
 }
 
 function doLogout() {
@@ -105,7 +107,7 @@ function onLogoutResponse(data) {
 	}
 	$("#logout_button").removeAttr("disabled");
 	$("#logout_load").hide();
-	resultbox.fadeIn().delay(1000).fadeOut();
+	resultbox.fadeIn().delay(RESULTBOX_FADE_DELAY).fadeOut();
 }
 
 function doCreate() {
@@ -139,14 +141,18 @@ function onCreateResponse(data) {
 	}
 	$("#usercreate_button").removeAttr("disabled");
 	$("#usercreate_load").hide();
-	resultbox.fadeIn().delay(1000).fadeOut();
+	resultbox.fadeIn().delay(RESULTBOX_FADE_DELAY).fadeOut();
 }
 
 function loadServerDetails() {
+	$("#serverdetails_load").show();
+	$("#serverdetails_button").attr("disabled", "disabled");
 	$.get("/serverdetails",makeGenericCallback(onServerDetailsResponse));
 }
 
 function onServerDetailsResponse(data) {
+	var resultbox = $("#serverdetails_result");
+	resultbox.removeClass("errorbox successbox");
 	$("#serverdetails_servertable tr").remove();
 	// For each server add all the JSON data we receive
 	$.each(data.servers,function(index, item) {
@@ -156,9 +162,16 @@ function onServerDetailsResponse(data) {
 		$("<td>").text(data.servers[index].port).appendTo("#serverdetails_server"+index);
 		$("<td>").text(data.servers[index].bandwidth).appendTo("#serverdetails_server"+index);
 	});
+	resultbox.text("Refreshed...");
+	resultbox.addClass("successbox");
+	$("#serverdetails_button").removeAttr("disabled");
+	$("#serverdetails_load").hide();
+	resultbox.fadeIn().delay(RESULTBOX_FADE_DELAY).fadeOut();
 }
 
 function loadUserList(filter) {
+	$("#usermanage_load").show();
+	$("#usermanage_button").attr("disabled", "disabled");
 	if(filter != undefined) {
 		$.post("/userlist",{filter: filter},makeGenericCallback(onUserListResponse));
 	} else {
@@ -174,6 +187,8 @@ function onUserListResponse(data) {
 		resultbox.text("Unknown error "+data.errorcode);
 		return;
 	}
+	resultbox.text("Refreshed...");
+	resultbox.addClass("successbox");
 	$("#usermanage_userlist div").remove();
 	$.each(data.users,function(index,item) {
 		$("<div>").attr("id","usermanage_user"+data.users[index].id).appendTo("#usermanage_userlist");
@@ -181,6 +196,9 @@ function onUserListResponse(data) {
 		$("<input>").val(data.users[index].email).appendTo("#usermanage_user"+data.users[index].id);
 		$("<input>").val(data.users[index].permissionlevel).appendTo("#usermanage_user"+data.users[index].id);
 	});
+	$("#usermanage_button").removeAttr("disabled");
+	$("#usermanage_load").hide();
+	resultbox.fadeIn().delay(RESULTBOX_FADE_DELAY).fadeOut();
 }
 
 var loginState = false;
