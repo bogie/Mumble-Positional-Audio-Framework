@@ -106,8 +106,6 @@ public abstract class BaseServlet extends HttpServlet {
 				return;
 			}
 			User user = (User) session.getAttribute("user");
-			// If there is no user the session was terminated server side
-			// FIXME: Tell the client to delete the cookie in this case!
 			if (user == null) {
 				sendError(ErrorCode.RIGHT_NOT_LOGGED_IN, resp);
 				return;

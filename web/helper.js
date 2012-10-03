@@ -16,7 +16,7 @@
  ******************************************************************************/
 var loginState = false;
 
-ErrorCode = {
+var ErrorCode = {
 		/**
 		 * Given whenever an operation was successful
 		 */
@@ -53,9 +53,38 @@ ErrorCode = {
 		RIGHT_INSUFFICIENT_PERMISSION: 6
 }
 
+function User(id, name, permlvl) {
+	this.id = id;
+	this.name = name;
+	this.permlvl = permlvl;
+}
+
+var user;
+
+function loadPage(event) {
+	fetchUserInfo();
+	checkLoginStatus();
+	loadServerDetails();
+	onHashChanged(event);
+}
+
+function onHashChanged(event) {
+	// Remove leading #
+	var hash = location.hash.substring(1);
+	// Hide all other content switches
+	$(".cswitch").hide();
+	// Show the one switched to
+	$("#"+hash).show();
+}
+
 function removeCookie() {
 	$.removeCookie("JSESSIONID");
-	checkLoginStatus();
+}
+
+function forceLogout() {
+	$("#debug").append("<br />Forcing logout...");
+	removeCookie();
+	loginSwitch(false);
 }
 
 function checkLoginStatus() {

@@ -54,14 +54,14 @@ public class Login extends BaseServlet {
 			throws ServiceException {
 		try {
 			PreparedStatement stmt = conn
-					.prepareStatement("SELECT name, password, permissionlevel FROM users WHERE name=? AND password=?");
+					.prepareStatement("SELECT id, permissionlevel FROM users WHERE name=? AND password=?");
 			stmt.setString(1, user);
 			stmt.setString(2, pass);
 			ResultSet res = stmt.executeQuery();
 			// If the user with that password has been found, create user object
 			// with permission
 			if (res.next()) {
-				return new User(user, res.getInt(3));
+				return new User(res.getInt(1), user, res.getInt(2));
 			}
 			// Or not...
 			return null;

@@ -22,6 +22,7 @@ import mpaf.servlets.Login;
 import mpaf.servlets.Logout;
 import mpaf.servlets.ServerDetails;
 import mpaf.servlets.UserCreate;
+import mpaf.servlets.UserInfo;
 import mpaf.sql.SqlightHandler;
 
 import org.apache.commons.configuration.CompositeConfiguration;
@@ -76,8 +77,6 @@ public class Main {
 		connector.setPort(config.getInt("jetty.ports.http", 10001));
 		server.setConnectors(new Connector[] { connector });
 
-		// TODO: change class mpaf.Logger to make it compatible with jetty
-		// logger
 		ServletContextHandler servletC = new ServletContextHandler(
 				ServletContextHandler.SESSIONS);
 		servletC.setContextPath("/");
@@ -94,6 +93,7 @@ public class Main {
 		servletC.addServlet(new ServletHolder(new Login()), "/login");
 		servletC.addServlet(new ServletHolder(new Logout()), "/logout");
 		servletC.addServlet(new ServletHolder(new UserCreate()), "/usercreate");
+		servletC.addServlet(new ServletHolder(new UserInfo()), "/userinfo");
 
 		WebAppContext webC = new WebAppContext();
 		webC.setServer(server);

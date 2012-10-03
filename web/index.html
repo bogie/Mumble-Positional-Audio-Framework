@@ -27,14 +27,6 @@ along with MPAF.  If not, see <http://www.gnu.org/licenses/>.
 <script src="ajax.js"></script>
 <script src="helper.js"></script>
 <script>
-function onHashChanged(event) {
-	// Remove leading #
-	var hash = location.hash.substring(1);
-	// Hide all other content switches
-	$(".cswitch").hide();
-	// Show the one switched to
-	$("#"+hash).show();
-}
 $(document).ready(function(){
 	$("#debug").load("debug.html");
 	$("#login").load("login.html");
@@ -42,10 +34,8 @@ $(document).ready(function(){
 	$("#home").load("home.html");
 	$("#server_details").load("server_details.html");
 	$("#user_create").load("usercreate.html");
-	
-	checkLoginStatus();
-	loadServerDetails();
 });
+window.onload = loadPage;
 window.onhashchange = onHashChanged;
 </script>
 

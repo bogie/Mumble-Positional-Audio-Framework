@@ -18,12 +18,22 @@ package mpaf.auth;
 
 public class User {
 
+	private int id;
 	private String name;
-	private int permissionlvl = 0;
+	private int permissionlvl;
 
-	public User(String name, int permissionlvl) {
+	public User(int id, String name, int permissionlvl) {
+		this.id = id;
 		this.name = name;
 		this.permissionlvl = permissionlvl;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public String getName() {
