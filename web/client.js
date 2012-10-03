@@ -53,6 +53,8 @@ function onUserInfoResponse(data) {
 }
 
 function doLogin() {
+	$("#login_load").show();
+	$("#login_button").attr("disabled", "disabled");
 	var user = $("#login_user").val();
 	var pass = $("#login_pass").val();
 	$.post("/login", {login_name: user, login_pass: pass},makeGenericCallback(onLoginResponse));
@@ -76,10 +78,14 @@ function onLoginResponse(data) {
 			break;
 		}
 	}
+	$("#login_button").removeAttr("disabled");
+	$("#login_load").hide();
 	resultbox.fadeIn().delay(1000).fadeOut();
 }
 
 function doLogout() {
+	$("#logout_load").show();
+	$("#logout_button").attr("disabled", "disabled");
 	$.get("/logout",makeGenericCallback(onLogoutResponse));
 }
 
@@ -97,10 +103,14 @@ function onLogoutResponse(data) {
 			break;
 		}
 	}
+	$("#logout_button").removeAttr("disabled");
+	$("#logout_load").hide();
 	resultbox.fadeIn().delay(1000).fadeOut();
 }
 
 function doCreate() {
+	$("#usercreate_load").show();
+	$("#usercreate_button").attr("disabled", "disabled");
 	var user = $("#usercreate_user").val();
 	var pass = $("#usercreate_pass").val();
 	var email = $("#usercreate_email").val();
@@ -127,6 +137,8 @@ function onCreateResponse(data) {
 			break;
 		}
 	}
+	$("#usercreate_button").removeAttr("disabled");
+	$("#usercreate_load").hide();
 	resultbox.fadeIn().delay(1000).fadeOut();
 }
 
@@ -144,4 +156,112 @@ function onServerDetailsResponse(data) {
 		$("<td>").text(data.servers[index].port).appendTo("#serverdetails_server"+index);
 		$("<td>").text(data.servers[index].bandwidth).appendTo("#serverdetails_server"+index);
 	});
+}
+
+var loginState = false;
+
+var ErrorCode = {
+		/**
+		 * Given whenever an operation was successful
+		 */
+		SUCCESS: 0,
+
+		/**
+		 * There was an internal error. Tough luck.
+		 */
+		INTERNAL_ERROR: 1,
+
+		/**
+		 * The given login credentials were wrong
+		 */
+		LOGIN_WRONG_CREDENTIALS: 2,
+
+		/**
+		 * The given user create credentials were invalid
+		 */
+		CREATE_INVALID_CREDENTIALS: 3,
+
+		/**
+		 * The given name has already been taken
+		 */
+		CREATE_NAME_TAKEN: 4,
+
+		/**
+		 * The attempting user is not logged in
+		 */
+		RIGHT_NOT_LOGGED_IN: 5,
+
+		/**
+		 * The rights of the attempting user are too low
+		 */
+		RIGHT_INSUFFICIENT_PERMISSION: 6
+}
+
+function User(id, name, permlvl) {
+	this.id = id;
+	this.name = name;
+	this.permlvl = permlvl;
+}
+
+var user;
+
+function updateUserInfo() {
+	$("#logout_userinfo").text("Hello "+user.name+"! Permission level: "+user.permlvl);
+}
+
+function fetchHTML() {
+	$("#debug").load("debug.html");
+	$("#login").load("login.html");
+	$("#logout").load("logout.html");
+	$("#home").load("home.html");
+	$("#serverdetails").load("serverdetails.html");
+	$("#usercreate").load("usercreate.html");
+}
+
+function loadPage(event) {
+	fetchHTML();
+	checkLoginStatus();
+	loadServerDetails();
+	onHashChanged(event);
+}
+
+function onHashChanged(event) {
+	// Remove leading #
+	var hash = location.hash.substring(1);
+	// Hide all other content switches
+	$(".cswitch").hide();
+	// Show the one switched to
+	$("#"+hash).show();
+}
+
+function removeCookie() {
+	$.removeCookie("JSESSIONID");
+}
+
+function forceLogout() {
+	removeCookie();
+	loginSwitch(false);
+}
+
+function checkLoginStatus() {
+	$("#debug").append("<br />Checking login status...");
+	if($.cookie("JSESSIONID") != null) {
+		$("#debug").append("<br />Logged in");
+		loginSwitch(true);
+	} else {
+		$("#debug").append("<br />Not logged in");
+		loginSwitch(false);
+	}
+}
+
+function loginSwitch(login) {
+	loginState = login;
+	if(loginState) {
+		fetchUserInfo();
+		$(".loggedout").hide();
+		$(".loggedin").show();
+	} else {
+		$(".loggedin").hide();
+		$(".loggedout").show();
+	}
 }

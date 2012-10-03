@@ -55,8 +55,6 @@ public class UserCreate extends BaseServlet {
 
 	private void createUser(String user, String pass, String email, int permlvl)
 			throws ServiceException {
-		Logger.debug(this.getClass(), "Creating user with: " + user + ", "
-				+ pass + ", " + email + ", " + permlvl);
 		try {
 			PreparedStatement stmtcheck = conn
 					.prepareStatement("SELECT id FROM users WHERE name=?");

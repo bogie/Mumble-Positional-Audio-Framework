@@ -18,6 +18,7 @@ package mpaf;
 
 import mpaf.ice.IceController;
 import mpaf.ice.IceModel;
+import mpaf.servlets.DefaultCacheServlet;
 import mpaf.servlets.Login;
 import mpaf.servlets.Logout;
 import mpaf.servlets.ServerDetails;
@@ -29,13 +30,10 @@ import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.eclipse.jetty.server.Connector;
-import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.bio.SocketConnector;
-import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-import org.eclipse.jetty.webapp.WebAppContext;
 
 public class Main {
 	public static void main(String[] args) {
@@ -88,6 +86,10 @@ public class Main {
 		servletC.setAttribute("iceController", iceC);
 		servletC.setAttribute("iceModel", iceM);
 		// To add a servlet:
+		ServletHolder holder = new ServletHolder(new DefaultCacheServlet());
+		holder.setInitParameter("cacheControl", "max-age=3600,public");
+		holder.setInitParameter("resourceBase", "web");
+		servletC.addServlet(holder, "/");
 		servletC.addServlet(new ServletHolder(new ServerDetails()),
 				"/serverdetails");
 		servletC.addServlet(new ServletHolder(new Login()), "/login");
@@ -95,14 +97,7 @@ public class Main {
 		servletC.addServlet(new ServletHolder(new UserCreate()), "/usercreate");
 		servletC.addServlet(new ServletHolder(new UserInfo()), "/userinfo");
 
-		WebAppContext webC = new WebAppContext();
-		webC.setServer(server);
-		webC.setContextPath("/");
-		webC.setWar("web");
-
-		ContextHandlerCollection contexts = new ContextHandlerCollection();
-		contexts.setHandlers(new Handler[] { servletC, webC });
-		server.setHandler(contexts);
+		server.setHandler(servletC);
 		try {
 			server.start();
 			server.join();
