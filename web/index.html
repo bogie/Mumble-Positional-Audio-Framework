@@ -49,50 +49,54 @@ $(document).ready(function(){
 window.onhashchange = onHashChanged;
 </script>
 
-	<div class="header">
+		<div class="header">
+			<div id="header">
+				<div id="title">
+				    <h1> &#x2591; MPAF</h1>
+				</div>
+				<div id="main-panel">
+					<nav class="menu">
+						<ul>
+							<li><a href="#home">HOME</a></li>
+							<li><a href="#server_details">SERVER DETAILS</a></li>
+							<li><a href="#server_details">INFO</a></li>
+						</ul>
+					</nav>
+				</div>
+			</div>
+		</div >
 
-		<div id="header">
-			<div id="title">
-			    <h1> &#x2591; MPAF</h1>
-			</div>
-			<div id="leftcolumn">
-				<nav class="menu">
-					<ul>
-						<li><a href="#home">HOME</a></li>
-						<li><a href="#server_details">SERVER DETAILS</a></li>
-						<li><a href="#user_create" class="loggedin">CREATE USER</a></li>
-						<li><a href="">NYI</a></li>
-					</ul>
-				</nav>
-			</div>
-		</div>
+		<!--TODO: AdminPanel nur sichtbar wenn eingeloggt-->
 		<div class="admin-panel">
+			<nav class="menu">
+				<ul>
+					<li><a href="#home">Settings</a></li>
+					<li><a href="#server_details">Create User</a></li>
+					<li><a href="#user_create" class="loggedin">createuser</a></li>
+				</ul>
+			</nav>
 		</div>
+		<!--/TODO: AdminPanel nur sichtbar wenn eingeloggt-->
 
-	</div >
-				<div id="login" class="loggedout"></div>
+		<div id="login" class="loggedout"></div>
 		<div id="logout" class="loggedin"></div>
 
-	<!--content-->
-		<div id="wrapper" >
+		<!--content-->
+		<div class="window-div">
+			<p>Window Name</p>
+			<div id="wrapper" >
+				<div id="cwrapper">
+					<div id="home" class="cswitch">HOME</div>
+					<div id="server_details" class="cswitch">SERVER DETAILS</div>
+					<div id="user_create" class="cswitch">USER CREATE</div>
+				</div>
+			</div>
 
-		<div id="cwrapper">
-			<div id="home" class="cswitch">HOME</div>
-			<div id="server_details" class="cswitch">SERVER DETAILS</div>
-			<div id="user_create" class="cswitch">USER CREATE</div>
 		</div>
-		<div id="rightcolumn">
-			<!-- <p>Right Column</p> -->
-		</div>
-		<div id="footer">
+	<!--/content-->
+		<div class="footer" id="footer">
 			<p>amkoi ist toll, bawki hat aber die besseren Super-Kuh-Kräfte</p>
 		</div>
 		<div id="debug">DOCUMENT LOADING</div>
-	</div>
-	<!--/content-->
-	<div class="footer">
-
-	</div>
-
-</body>
+	</body>
 </html>
