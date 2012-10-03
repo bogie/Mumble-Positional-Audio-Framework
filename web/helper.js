@@ -66,7 +66,6 @@ function updateUserInfo() {
 }
 
 function loadPage(event) {
-	fetchUserInfo();
 	checkLoginStatus();
 	loadServerDetails();
 	onHashChanged(event);
@@ -103,8 +102,9 @@ function checkLoginStatus() {
 
 function loginSwitch(login) {
 	loginState = login;
-	fetchUserInfo();
+	
 	if(loginState) {
+		fetchUserInfo();
 		$(".loggedout").hide();
 		$(".loggedin").show();
 	} else {
