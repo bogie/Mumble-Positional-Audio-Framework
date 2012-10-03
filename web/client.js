@@ -14,7 +14,55 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with MPAF.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
+
+var ErrorCode = {
+		/**
+		 * Given whenever an operation was successful
+		 */
+		SUCCESS: 0,
+
+		/**
+		 * There was an internal error. Tough luck.
+		 */
+		INTERNAL_ERROR: 1,
+
+		/**
+		 * The given login credentials were wrong
+		 */
+		LOGIN_WRONG_CREDENTIALS: 2,
+
+		/**
+		 * The given user create credentials were invalid
+		 */
+		CREATE_INVALID_CREDENTIALS: 3,
+
+		/**
+		 * The given name has already been taken
+		 */
+		CREATE_NAME_TAKEN: 4,
+
+		/**
+		 * The attempting user is not logged in
+		 */
+		RIGHT_NOT_LOGGED_IN: 5,
+
+		/**
+		 * The rights of the attempting user are too low
+		 */
+		RIGHT_INSUFFICIENT_PERMISSION: 6
+}
+
 var RESULTBOX_FADE_DELAY = 1000;
+
+var loginState = false;
+
+var user;
+
+function User(id, name, permlvl) {
+	this.id = id;
+	this.name = name;
+	this.permlvl = permlvl;
+}
 
 function makeGenericCallback(callback) {
 	return function(data) {
@@ -37,7 +85,7 @@ function makeGenericCallback(callback) {
 	}
 }
 
-function fetchUserInfo() {
+function loadUserInfo() {
 	$.get("/userinfo",makeGenericCallback(onUserInfoResponse));
 }
 
@@ -169,13 +217,17 @@ function onServerDetailsResponse(data) {
 	resultbox.fadeIn().delay(RESULTBOX_FADE_DELAY).fadeOut();
 }
 
+function onUserManageFilterChange() {
+	loadUserList($("#usermanage_filter").val());
+}
+
 function loadUserList(filter) {
 	$("#usermanage_load").show();
 	$("#usermanage_button").attr("disabled", "disabled");
-	if(filter != undefined) {
-		$.post("/userlist",{filter: filter},makeGenericCallback(onUserListResponse));
-	} else {
+	if(filter == undefined || filter == "") {
 		$.post("/userlist",makeGenericCallback(onUserListResponse));
+	} else {
+		$.post("/userlist",{filter: filter},makeGenericCallback(onUserListResponse));
 	}
 }
 
@@ -200,53 +252,6 @@ function onUserListResponse(data) {
 	$("#usermanage_load").hide();
 	resultbox.fadeIn().delay(RESULTBOX_FADE_DELAY).fadeOut();
 }
-
-var loginState = false;
-
-var ErrorCode = {
-		/**
-		 * Given whenever an operation was successful
-		 */
-		SUCCESS: 0,
-
-		/**
-		 * There was an internal error. Tough luck.
-		 */
-		INTERNAL_ERROR: 1,
-
-		/**
-		 * The given login credentials were wrong
-		 */
-		LOGIN_WRONG_CREDENTIALS: 2,
-
-		/**
-		 * The given user create credentials were invalid
-		 */
-		CREATE_INVALID_CREDENTIALS: 3,
-
-		/**
-		 * The given name has already been taken
-		 */
-		CREATE_NAME_TAKEN: 4,
-
-		/**
-		 * The attempting user is not logged in
-		 */
-		RIGHT_NOT_LOGGED_IN: 5,
-
-		/**
-		 * The rights of the attempting user are too low
-		 */
-		RIGHT_INSUFFICIENT_PERMISSION: 6
-}
-
-function User(id, name, permlvl) {
-	this.id = id;
-	this.name = name;
-	this.permlvl = permlvl;
-}
-
-var user;
 
 function updateUserInfo() {
 	$("#logout_userinfo").text("Hello "+user.name+"! Permission level: "+user.permlvl);
@@ -302,7 +307,7 @@ function checkLoginStatus() {
 function loginSwitch(login) {
 	loginState = login;
 	if(loginState) {
-		fetchUserInfo();
+		loadUserInfo();
 		$(".loggedout").hide();
 		$(".loggedin").show();
 	} else {

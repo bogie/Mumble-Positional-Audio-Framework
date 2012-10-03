@@ -16,6 +16,7 @@ along with MPAF.  If not, see <http://www.gnu.org/licenses/>.
 -->
 User Manage!
 <button id="usermanage_button" type="button" onclick="loadUserList()">Refresh</button>
-<div id="usermanage_result" style="display:none">RESULT</div>
+<div id="usermanage_result" style="display:none">RESULT</div><br />
+<input id="usermanage_filter" type="text" placeholder="Filter" onkeyup="onUserManageFilterChange()"/>
 <img id="usermanage_load" src="img/loading.gif" style="display: none"/> 
 <div id="usermanage_userlist"></div>
