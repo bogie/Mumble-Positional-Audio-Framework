@@ -201,14 +201,23 @@ function loadServerDetails() {
 function onServerDetailsResponse(data) {
 	var resultbox = $("#serverdetails_result");
 	resultbox.removeClass("errorbox successbox");
-	$("#serverdetails_serverlist_body div").remove();
+	$("#serverdetails_serverlist div").remove();
 	// For each server add all the JSON data we receive
-	$.each(data.servers,function(index, item) {
-		$("<div>").attr("id","serverdetails_serverlist_body_server"+index).appendTo("#serverdetails_serverlist_body");
-		$("<div>").text(data.servers[index].id).appendTo("#serverdetails_serverlist_body_server"+index);
-		$("<div>").text(data.servers[index].registername).appendTo("#serverdetails_serverlist_body_server"+index);
-		$("<div>").text(data.servers[index].port).appendTo("#serverdetails_serverlist_body_server"+index);
-		$("<div>").text(data.servers[index].bandwidth).appendTo("#serverdetails_serverlist_body_server"+index);
+	$.each(data.servers,function(server_index, server_item) {
+		$("<div>").attr("id","serverdetails_serverlist_server"+server_item.id).appendTo("#serverdetails_serverlist");
+		$("<details>").attr("id","serverdetails_serverlist_server"+server_item.id+"_root").appendTo("#serverdetails_serverlist_server"+server_item.id);
+		$("<summary>").attr("id","serverdetails_serverlist_server"+server_item.id+"_root_sum").appendTo("#serverdetails_serverlist_server"+server_item.id+"_root");
+		$("<div>").text(server_item.registername).appendTo("#serverdetails_serverlist_server"+server_item.id+"_root_sum");
+		$("<div>").text("ID: "+server_item.id).appendTo("#serverdetails_serverlist_server"+server_item.id+"_root");
+		$("<div>").text("Host: "+server_item.host).appendTo("#serverdetails_serverlist_server"+server_item.id+"_root");
+		$("<div>").text("Port: "+server_item.port).appendTo("#serverdetails_serverlist_server"+server_item.id+"_root");
+		$("<div>").text("Bandwidth: "+server_item.bandwidth).appendTo("#serverdetails_serverlist_server"+server_item.id+"_root");
+		$("<details>").attr("id","serverdetails_serverlist_server"+server_item.id+"_root_channel"+server_item.channels[0].id).appendTo("#serverdetails_serverlist_server"+server_item.id+"_root");
+		$("<summary>").text(server_item.channels[0].name).appendTo("#serverdetails_serverlist_server"+server_item.id+"_root_channel"+server_item.channels[0].id);
+		for(i=1;i<server_item.channels.length;i++) {
+			$("<details>").attr("id","serverdetails_serverlist_server"+server_item.id+"_root_channel"+server_item.channels[i].id).appendTo("#serverdetails_serverlist_server"+server_item.id+"_root_channel"+server_item.channels[i].parent);
+			$("<summary>").text(server_item.channels[i].name).appendTo("#serverdetails_serverlist_server"+server_item.id+"_root_channel"+server_item.channels[i].id);
+		}
 	});
 	resultbox.text("Refreshed...");
 	resultbox.addClass("successbox");

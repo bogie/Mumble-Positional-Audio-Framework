@@ -19,6 +19,7 @@ package mpaf.servlets;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -26,9 +27,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import mpaf.Logger;
 import mpaf.ServerConfig;
+import mpaf.ice.ChannelHandler;
 import mpaf.ice.IceModel;
+import mpaf.json.ChannelJson;
 import mpaf.json.ServerDetailsJson;
 import mpaf.json.ServerJson;
+import Murmur.Channel;
+import Murmur.InvalidSecretException;
+import Murmur.ServerBootedException;
 
 import com.google.gson.Gson;
 
@@ -51,9 +57,21 @@ public class ServerDetails extends BaseServlet {
 		}
 		ArrayList<ServerJson> jsonservers = new ArrayList<ServerJson>();
 		HashMap<Integer, ServerConfig> servers = iceM.getServers();
+		ChannelHandler channelH = new ChannelHandler(iceM);
 		for (ServerConfig server : servers.values()) {
-			ServerJson jsonserver = new ServerJson(server);
-			jsonservers.add(jsonserver);
+			Map<Integer, Channel> channels = null;
+			try {
+				channels = channelH
+						.getChannels(Integer.parseInt(server.getId()));
+			} catch (InvalidSecretException | ServerBootedException
+					| NumberFormatException e) {
+				e.printStackTrace();
+			}
+			ArrayList<ChannelJson> jsonchannels = new ArrayList<ChannelJson>();
+			for (Channel chan : channels.values()) {
+				jsonchannels.add(new ChannelJson(chan));
+			}
+			jsonservers.add(new ServerJson(server, jsonchannels));
 		}
 		send(new ServerDetailsJson(jsonservers), resp);
 	}
