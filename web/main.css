@@ -120,6 +120,7 @@ p {
 }
 
 .window-div{
+	position: relative;
 	border-radius: 5px;
 	padding: 0px 0px 0px 0px;
 	background-color: white;
@@ -181,6 +182,14 @@ button{
 /*------------Content------------*/
 .cswitch {
 	display: none;
+}
+
+#_serverdetails{
+	width: 100%;
+}
+
+#_serverdetails div{
+	width: 100%;
 }
 
 .successbox {
@@ -277,33 +286,40 @@ button{
 
 
 /*----WEBKIT----*/
+
+div > details{
+	-webkit-box-shadow: 0 8px 2px -8px #aaa;
+	-moz-box-shadow: 0 8px 2px -8px #aaa;
+	box-shadow: 0 8px 2px -8px #aaa;
+	padding: 2px;
+	border: 1px solid silver;
+	border-radius: 5px;
+	background-color: #ddd;
+
+}
+details{
+	width: 100%;
+	padding: 2px;
+}
+
+details *{
+	margin: 5px;
+}
+
+details summary{
+	background-color: #aaa;
+	padding: 5px;
+	color: #eee;
+}
+
 summary div{
 	display: inline;
-	margin-left: auto;
-	margin-right: auto;
 }
 details summary::-webkit-details-marker {
-  background: red;
-  color: #fff;
-  font-size: 500%;
+	color: #333;
+	font-size: 150%;
 }
 
 summary::-webkit-details-marker {
-  display: none;
-}
-summary:after {
-  background: red; 
-  border-radius: 5px; 
-  content: "+"; 
-  color: #fff; 
-  float: left; 
-  font-size: 1.5em; 
-  font-weight: bold; 
-  margin: -5px 10px 0 0; 
-  padding: 0; 
-  text-align: center; 
-  width: 20px;
-}
-details[open] summary:after {
-  content: "-";
+
 }
