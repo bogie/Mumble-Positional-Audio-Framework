@@ -249,11 +249,11 @@ function onServerDetailsResponse(data) {
 		$("<summary>").text(server_item.channels[0].name).appendTo("#serverdetails_serverlist_server"+server_item.id+"_root_channel"+server_item.channels[0].id);
 		for(i=1;i<server_item.channels.length;i++) {
 			$("<details>").attr("id","serverdetails_serverlist_server"+server_item.id+"_root_channel"+server_item.channels[i].id).appendTo("#serverdetails_serverlist_server"+server_item.id+"_root_channel"+server_item.channels[i].parent);
-			$("<summary>").text(server_item.channels[i].name).appendTo("#serverdetails_serverlist_server"+server_item.id+"_root_channel"+server_item.channels[i].id);
+			$("<summary>").attr("id","serverdetails_serverlist_server"+server_item.id+"_root_channel_sum"+server_item.channels[i].id).text(server_item.channels[i].name).appendTo("#serverdetails_serverlist_server"+server_item.id+"_root_channel"+server_item.channels[i].id);
 		}
 		for(i=0;i<server_item.handlers.length;i++) {
 			if(server_item.handlers[i].handlerName == "Battlefield 3") {
-				$("<img>").attr("src","img/bf3.png").appendTo("#serverdetails_serverlist_server"+server_item.id+"_root_channel"+server_item.handlers[i].gameChannelId);
+				$("<img>").attr("src","img/bf3.png").appendTo("#serverdetails_serverlist_server"+server_item.id+"_root_channel_sum"+server_item.handlers[i].gameChannelId);
 			}
 		}
 	});
