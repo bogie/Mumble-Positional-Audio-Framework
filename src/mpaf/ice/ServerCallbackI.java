@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import mpaf.Logger;
-import mpaf.games.Battlefield3Handler;
 import mpaf.games.DefaultHandler;
 import Ice.Current;
 import Murmur.Channel;
