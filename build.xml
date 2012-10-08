@@ -13,7 +13,11 @@
         <delete dir="build/mpaf_lib"/>
         <mkdir dir="build/mpaf_lib"/>
     	<delete dir="build/web"/>
-		<copydir src="web" dest="build/web"/>
+		<copy todir="build/web">
+    	   <fileset dir="web/">
+    	    <exclude name="**/jquery.js"/>
+			</fileset>
+    	</copy>
 		<copy file="mpaf.properties.default.xml" todir="build/"/>
     	<copy file="mpaf.properties.default.xml" tofile="build/mpaf.properties.user.xml"/>
 		<copy file="mpaf.db" todir="build/"/>
