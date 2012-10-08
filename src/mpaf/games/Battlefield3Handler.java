@@ -82,6 +82,11 @@ public class Battlefield3Handler extends DefaultHandler {
 	public void handleUserState(User state) throws InvalidSecretException,
 			ServerBootedException, InvalidChannelException,
 			InvalidSessionException {
+		if(this.active == false)
+		{
+			Logger.debug(this.getClass(),"handleUserState: Battlefield 3 handler is deactivated.");
+			return;
+		}
 		Logger.debug(this.getClass(), "Handling UserStateChanged for BF3");
 		Logger.debug(this.getClass(), state.name);
 

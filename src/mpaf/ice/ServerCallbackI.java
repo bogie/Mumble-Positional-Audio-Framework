@@ -16,8 +16,12 @@
  ******************************************************************************/
 package mpaf.ice;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import mpaf.Logger;
-import mpaf.games.GameHandler;
+import mpaf.games.Battlefield3Handler;
+import mpaf.games.DefaultHandler;
 import Ice.Current;
 import Murmur.Channel;
 import Murmur.InvalidChannelException;
@@ -29,8 +33,10 @@ import Murmur.User;
 public class ServerCallbackI extends Murmur._ServerCallbackDisp {
 	private static final long serialVersionUID = -666110379922768625L;
 
-	Murmur.ServerPrx server;
-	IceModel im;
+	private Murmur.ServerPrx server;
+	@SuppressWarnings("unused")
+	private IceModel im;
+	private Map<String, DefaultHandler> handlers = new HashMap<String, DefaultHandler>();
 
 	public ServerCallbackI(Murmur.ServerPrx server,IceModel im) {
 		this.server = server;
@@ -55,11 +61,14 @@ public class ServerCallbackI extends Murmur._ServerCallbackDisp {
 			Logger.debug(this.getClass(), "User state has changed");
 			if (state.context.length() < 1)
 				return;
+			
 			// split context with null terminated character
 			String[] splitcontext = state.context.split("\0");
 			if (splitcontext.length < 1) {
-				for (GameHandler handler : im.getHandlers().values()) {
+				for (DefaultHandler handler : handlers.values()) {
 					if (handler.isUserInGameChannel(state)) {
+						// return user back to the root game channel
+						Logger.debug(this.getClass(), "Returning user back to gameChannel");
 						state.channel = handler.updateGameTree().c.id;
 						server.setState(state);
 						return;
@@ -72,30 +81,14 @@ public class ServerCallbackI extends Murmur._ServerCallbackDisp {
 			String gamename = splitcontext[0];
 			Logger.debug(this.getClass(), gamename);
 			// Get GameHandler from HashMap
-			GameHandler handler = im.getHandlers().get(gamename);
+			DefaultHandler handler = handlers.get(gamename);
 
 			// Check if GameHandler exists
 			if (handler == null) {
-				/*
-				// Create a new GameHandler for BF3
-				Logger.debug(this.getClass(), "Creating new GameHandler");
-				if (gamename.equalsIgnoreCase("Battlefield 3")) {
-					Logger.debug(this.getClass(),
-							"Creating new BattleField3Handler");
-					Battlefield3Handler bf3handler = new Battlefield3Handler(
-							this.server);
-					Logger.debug(this.getClass(), "BF3 Handler generated is: "
-							+ bf3handler);
-					handlers.put(gamename, bf3handler);
-					handler = bf3handler;
-				} else {
-					Logger.debug(this.getClass(),
-							"tried to create GameHandler for unsupported game");
-					return;
-				}*/
+				Logger.debug(this.getClass(),"Handler for gamename: "+gamename+" does not exist, please create one manually.");
 				return;
 			}
-			Logger.debug(this.getClass(), "There are " + im.getHandlers().size()
+			Logger.debug(this.getClass(), "There are " + handlers.size()
 					+ " handlers now.");
 			// execute GameHandler.handle(User state)
 			Logger.debug(this.getClass(), "started handling UserState");
@@ -131,6 +124,14 @@ public class ServerCallbackI extends Murmur._ServerCallbackDisp {
 	public void channelStateChanged(Channel state, Current __current) {
 		// TODO Auto-generated method stub
 
+	}
+
+	public Map<String, DefaultHandler> getHandlers() {
+		return handlers;
+	}
+
+	public void setHandlers(Map<String, DefaultHandler> handlers) {
+		this.handlers = handlers;
 	}
 
 }

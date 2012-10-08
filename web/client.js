@@ -167,6 +167,7 @@ function doCreate() {
 	var permlvl = $("#usercreate_permlvl").val();
 	$.post("/usercreate", {create_name: user, create_pass: pass, create_email: email, create_permlvl: permlvl},makeGenericCallback(onCreateResponse));
 }
+
 function onCreateResponse(data) {
 	var resultbox = $("#usercreate_result");
 	resultbox.removeClass("errorbox successbox");
@@ -189,6 +190,38 @@ function onCreateResponse(data) {
 	}
 	$("#usercreate_button").removeAttr("disabled");
 	$("#usercreate_load").hide();
+	resultbox.fadeIn().delay(RESULTBOX_FADE_DELAY).fadeOut();
+}
+
+function doManage() {
+	$("#servermanage_load").show();
+	$("#servermanage_button").attr("disabled", "disabled");
+	var serverid = $("#servermanage_serverid").val();
+	var handlername = $("#servermanage_handlername").val();
+	var gamechannelid = $("#servermanage_gamechannelid").val();
+	var active = $("#servermanage_active").val();
+	$.post("/servermanage", {serverId: serverid, handlerName: handlername, gameChannelId: gamechannelid, activate: active},makeGenericCallback(onManageResponse));
+}
+
+function onManageResponse(data) {
+	var resultbox = $("#servermanage_result");
+	resultbox.removeClass("errorbox successbox");
+	if(data.success) {
+		resultbox.text("Server updated successfully");
+		resultbox.addClass("successbox");
+	} else {
+		resultbox.addClass("errorbox");
+		switch(data.errorcode) {
+			case ErrorCode.HANDLER_INVALID_INFORMATION:
+				resultbox.text("Invalid information!");
+				break;
+			default:
+				resultbox.text("Unknown error number "+data.errorcode);
+				break;
+		}
+	}
+	$("#servermanage_button").removeAttr("disabled");
+	$("#servermanage_load").hide();
 	resultbox.fadeIn().delay(RESULTBOX_FADE_DELAY).fadeOut();
 }
 
@@ -217,6 +250,11 @@ function onServerDetailsResponse(data) {
 		for(i=1;i<server_item.channels.length;i++) {
 			$("<details>").attr("id","serverdetails_serverlist_server"+server_item.id+"_root_channel"+server_item.channels[i].id).appendTo("#serverdetails_serverlist_server"+server_item.id+"_root_channel"+server_item.channels[i].parent);
 			$("<summary>").text(server_item.channels[i].name).appendTo("#serverdetails_serverlist_server"+server_item.id+"_root_channel"+server_item.channels[i].id);
+		}
+		for(i=0;i<server_item.handlers.length;i++) {
+			if(server_item.handlers[i].handlerName == "Battlefield 3") {
+				$("<img>").attr("src","img/bf3.png").appendTo("#serverdetails_serverlist_server"+server_item.id+"_root_channel"+server_item.handlers[i].gameChannelId);
+			}
 		}
 	});
 	resultbox.text("Refreshed...");
@@ -272,6 +310,7 @@ function fetchHTML() {
 	$("#_logout").load("logout.html");
 	$("#_home").load("home.html");
 	$("#_serverdetails").load("serverdetails.html");
+	$("#_servermanage").load("servermanage.html");
 	$("#_usercreate").load("usercreate.html");
 	$("#_usermanage").load("usermanage.html");
 }

@@ -17,10 +17,8 @@
 package mpaf.ice;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import mpaf.ServerConfig;
-import mpaf.games.GameHandler;
 
 import org.apache.commons.configuration.CompositeConfiguration;
 
@@ -35,7 +33,6 @@ public class IceModel {
 	private Murmur.MetaPrx meta;
 	private HashMap<Integer, ServerConfig> servers = new HashMap<Integer, ServerConfig>();
 	private HashMap<Integer,Murmur.ServerCallbackPrx> callbacks = new HashMap<Integer,Murmur.ServerCallbackPrx>();
-	Map<String, GameHandler> handlers = new HashMap<String, GameHandler>();
 
 	public IceModel() {
 		// just in case :P
@@ -107,9 +104,5 @@ public class IceModel {
 
 	public HashMap<Integer, Murmur.ServerCallbackPrx> getCallbacks() {
 		return callbacks;
-	}
-	
-	public Map<String, GameHandler> getHandlers() {
-		return handlers;
 	}
 }

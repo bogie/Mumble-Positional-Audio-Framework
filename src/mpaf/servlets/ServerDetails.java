@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -27,9 +28,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import mpaf.Logger;
 import mpaf.ServerConfig;
+import mpaf.games.DefaultHandler;
 import mpaf.ice.ChannelHandler;
 import mpaf.ice.IceModel;
 import mpaf.json.ChannelJson;
+import mpaf.json.HandlerJson;
 import mpaf.json.ServerDetailsJson;
 import mpaf.json.ServerJson;
 import Murmur.Channel;
@@ -71,7 +74,13 @@ public class ServerDetails extends BaseServlet {
 			for (Channel chan : channels.values()) {
 				jsonchannels.add(new ChannelJson(chan));
 			}
-			jsonservers.add(new ServerJson(server, jsonchannels));
+			ArrayList<HandlerJson> jsonhandlers = new ArrayList<HandlerJson>();
+			for(Entry<String, DefaultHandler> handlerSet : server.getCallback().getHandlers().entrySet())
+			{
+				jsonhandlers.add(new HandlerJson(handlerSet.getKey(),true,handlerSet.getValue().getGameChannel()));
+			}
+
+			jsonservers.add(new ServerJson(server, jsonchannels, jsonhandlers));
 		}
 		send(new ServerDetailsJson(jsonservers), resp);
 	}

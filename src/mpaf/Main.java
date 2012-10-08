@@ -22,6 +22,7 @@ import mpaf.servlets.DefaultCacheServlet;
 import mpaf.servlets.Login;
 import mpaf.servlets.Logout;
 import mpaf.servlets.ServerDetails;
+import mpaf.servlets.ServerManage;
 import mpaf.servlets.UserCreate;
 import mpaf.servlets.UserInfo;
 import mpaf.servlets.UserList;
@@ -93,12 +94,13 @@ public class Main {
 		servletC.addServlet(holder, "/");
 		servletC.addServlet(new ServletHolder(new ServerDetails()),
 				"/serverdetails");
+		servletC.addServlet(new ServletHolder(new ServerManage()), "/servermanage");
 		servletC.addServlet(new ServletHolder(new Login()), "/login");
 		servletC.addServlet(new ServletHolder(new Logout()), "/logout");
 		servletC.addServlet(new ServletHolder(new UserCreate()), "/usercreate");
 		servletC.addServlet(new ServletHolder(new UserInfo()), "/userinfo");
 		servletC.addServlet(new ServletHolder(new UserList()), "/userlist");
-
+		
 		server.setHandler(servletC);
 		try {
 			server.start();

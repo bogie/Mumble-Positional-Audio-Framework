@@ -79,6 +79,7 @@ public class IceController {
 				Murmur.ServerCallbackPrx cbPrx = Murmur.ServerCallbackPrxHelper
 						.uncheckedCast(adapter.addWithUUID(cb));
 				server.addCallback(cbPrx);
+				Logger.debug(this.getClass(),"Added callback for server: "+server.id());
 				im.getCallbacks().put(server.id(), cbPrx);
 			}
 		} catch (InvalidSecretException e) {

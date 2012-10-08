@@ -51,7 +51,17 @@ public enum ErrorCode {
 	/**
 	 * The rights of the attempting user are too low
 	 */
-	RIGHT_INSUFFICIENT_PERMISSION(6);
+	RIGHT_INSUFFICIENT_PERMISSION(6),
+	
+	/**
+	 * The given handler information is invalid
+	 */
+	HANDLER_INVALID_INFORMATION(7),
+	
+	/**
+	 * Generic ICE Error
+	 */
+	ICE_GENERIC_ERROR(8);
 
 	private final int code;
 

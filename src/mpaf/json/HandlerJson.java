@@ -16,34 +16,18 @@
  ******************************************************************************/
 package mpaf.json;
 
-import java.util.Collection;
-
-import mpaf.ServerConfig;
-
-public class ServerJson {
+public class HandlerJson {
 
 	@SuppressWarnings("unused")
-	private int id;
+	private String handlerName;
 	@SuppressWarnings("unused")
-	private String registername;
+	private boolean enabled;
 	@SuppressWarnings("unused")
-	private String host;
-	@SuppressWarnings("unused")
-	private int port;
-	@SuppressWarnings("unused")
-	private int bandwidth;
-	@SuppressWarnings("unused")
-	private Collection<ChannelJson> channels;
-	@SuppressWarnings("unused")
-	private Collection<HandlerJson> handlers;
-
-	public ServerJson(ServerConfig server, Collection<ChannelJson> channels, Collection<HandlerJson> handlers) {
-		this.id = Integer.parseInt(server.getId());
-		this.registername = server.getRegistername();
-		this.host = server.getHost();
-		this.port = Integer.parseInt(server.getPort());
-		this.bandwidth = Integer.parseInt(server.getBandwidth());
-		this.channels = channels;
-		this.handlers = handlers;
+	private int gameChannelId;
+	
+	public HandlerJson(String handlerName, boolean enabled, int gameChannelId) {
+		this.handlerName= handlerName;
+		this.enabled = enabled;
+		this.gameChannelId = gameChannelId;
 	}
 }

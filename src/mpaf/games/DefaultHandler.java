@@ -20,6 +20,7 @@ package mpaf.games;
 import java.util.Arrays;
 import java.util.List;
 
+import mpaf.Logger;
 import mpaf.json.ContextJson;
 import mpaf.json.IdentityJson;
 import Murmur.ACL;
@@ -35,6 +36,19 @@ public class DefaultHandler implements GameHandler {
 	Murmur.ServerPrx server;
 	int game_channel_id = 0;
 	Tree gameTree = null;
+	boolean active = true;
+	
+	public void activate() {
+		this.active = true;
+	}
+	
+	public void deactivate() {
+		this.active = false;
+	}
+	
+	public boolean isActive() {
+		return this.active;
+	}
 	
 	@Override
 	public void handleUserState(User state) throws InvalidSecretException,
@@ -76,20 +90,34 @@ public class DefaultHandler implements GameHandler {
 
 	@Override
 	public boolean isUserInGameChannel(User state) throws InvalidSecretException, ServerBootedException {
-		boolean status = false;
-		_findUser(server.getTree(), state, status);
-		return status;
+		return _findUser(gameTree,state);
 	}
 	
-	private void _findUser(Tree parent, User state, boolean status){
-		for(Tree t : parent.children)
-		{
-			List<User> users = Arrays.asList(t.users);
-			if(users.contains(state))
-				status = true;
-			else
-				_findUser(t, state, status);
+	private boolean _findUser(Tree channel, User user) {
+		boolean found = false;
+		if(_isInChannel(channel, user))
+			return true;
+		else {
+			for(Tree t : channel.children)
+			{
+				if(_findUser(t, user))
+					found = true;
+			}
 		}
+		return found;
+	}
+	
+	private boolean _isInChannel(Tree t, User state) {
+		List<User> users = Arrays.asList(t.users);
+		for(User u : users)
+		{
+			if(u.name.equalsIgnoreCase(state.name))
+			{
+				Logger.debug(this.getClass(), "FOUND in channel: "+t.c.name);
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Override
@@ -99,11 +127,12 @@ public class DefaultHandler implements GameHandler {
 
 	}
 
+	public int getGameChannel() {
+		return game_channel_id;
+	}
+
 	@Override
 	public void setGameChannel(int channelId) throws InvalidSecretException, ServerBootedException, InvalidChannelException {
-		if(this.game_channel_id != 0) {
-			server.removeChannel(game_channel_id);
-		}
 		this.game_channel_id = channelId;
 		updateGameTree();
 	}
