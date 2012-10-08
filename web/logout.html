@@ -14,7 +14,16 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with MPAF.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<div id="login_result" style="display: none">RESULT</div>
-<div id="logout_userinfo">USERINFO</div>
-<button id="logout_button" type="button" onclick="doLogout()">Logout</button>
-<img id="logout_load" src="img/loading.gif" style="display: none"/>
+<div class="window-div">
+	<p>Logout</p>
+	<div>
+		<div>
+			<p><div id="logout_userinfo">USERINFO</div></p>
+			<button id="logout_button" type="button" onclick="doLogout()">Logout</button>
+		</div>
+		<div>
+			<img id="logout_load" src="img/loading.gif" style="display: none"/>
+		</div>
+		<div id="login_result" style="display: none">RESULT</div>
+	</div>
+</div>

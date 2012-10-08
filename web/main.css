@@ -27,7 +27,15 @@ input:-moz-placeholder { text-align:left; }
 body {
 	font-family: 'Whitney Cond A', 'Whitney Cond B', "ronnia-condensed", sans-serif;
 	font-size: 13px;
-	background-color: #eee;
+	background: rgb(135,135,135); /* Old browsers */
+background: -moz-radial-gradient(center, ellipse cover,  rgba(135,135,135,1) 0%, rgba(86,86,86,1) 100%); /* FF3.6+ */
+background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,rgba(135,135,135,1)), color-stop(100%,rgba(86,86,86,1))); /* Chrome,Safari4+ */
+background: -webkit-radial-gradient(center, ellipse cover,  rgba(135,135,135,1) 0%,rgba(86,86,86,1) 100%); /* Chrome10+,Safari5.1+ */
+background: -o-radial-gradient(center, ellipse cover,  rgba(135,135,135,1) 0%,rgba(86,86,86,1) 100%); /* Opera 12+ */
+background: -ms-radial-gradient(center, ellipse cover,  rgba(135,135,135,1) 0%,rgba(86,86,86,1) 100%); /* IE10+ */
+background: radial-gradient(ellipse at center,  rgba(135,135,135,1) 0%,rgba(86,86,86,1) 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#878787', endColorstr='#565656',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+
 }
 
 body div{
@@ -99,14 +107,16 @@ p {
 
 /*------------Login------------*/
 .loggedin, .loggedout {
-	position: relative;
-	margin-top: 20px;
-	margin-left: auto;
-	margin-right: auto;
 	/*top: 10px;
 	right: 10px;
 	float: right;
 	width: 265px;*/
+}
+
+.login-pos{
+	position: fixed;
+	right: 10px;
+	top: -15px;
 }
 
 .window-div{
@@ -131,17 +141,17 @@ p {
 	-moz-box-shadow: 0 4px 4px -4px #000;
 	box-shadow: 0 4px 4px -4px #000;
 	border-radius: 0px 0px 5px 5px;
-	padding: 10px;
+	padding: 12px;
 	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#eee), to(#ccc), color-stop(.9,#ddd));
 }
 
 .window-div p{
 	padding: 5px;
 	color: #aaa;
-	font-size: 10pt;
+	font-size: 11pt;
 }
 
-.window-div button{
+button{
 	color: white;
 	padding: 7px;
 	border: 2px;
@@ -164,7 +174,6 @@ p {
 	padding: 7px;
 	border: 1px solid silver;
 	border-radius: 5px;
-	margin: 2px;
 }
 
 /*------------/Login------------*/
@@ -264,4 +273,37 @@ p {
 }
 
 .admin-panel>div{
+}
+
+
+/*----WEBKIT----*/
+details{
+	display: inline;
+	margin-left: auto;
+	margin-right: auto;
+}
+details summary::-webkit-details-marker {
+  background: red;
+  color: #fff;
+  font-size: 500%;
+}
+
+summary::-webkit-details-marker {
+  display: none;
+}
+summary:after {
+  background: red; 
+  border-radius: 5px; 
+  content: "+"; 
+  color: #fff; 
+  float: left; 
+  font-size: 1.5em; 
+  font-weight: bold; 
+  margin: -5px 10px 0 0; 
+  padding: 0; 
+  text-align: center; 
+  width: 20px;
+}
+details[open] summary:after {
+  content: "-";
 }
