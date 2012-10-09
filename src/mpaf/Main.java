@@ -18,10 +18,12 @@ package mpaf;
 
 import mpaf.ice.IceController;
 import mpaf.ice.IceModel;
+import mpaf.servlets.ChannelList;
 import mpaf.servlets.DefaultCacheServlet;
+import mpaf.servlets.HandlerList;
 import mpaf.servlets.Login;
 import mpaf.servlets.Logout;
-import mpaf.servlets.ServerDetails;
+import mpaf.servlets.ServerList;
 import mpaf.servlets.ServerManage;
 import mpaf.servlets.UserCreate;
 import mpaf.servlets.UserInfo;
@@ -92,15 +94,19 @@ public class Main {
 		holder.setInitParameter("cacheControl", "max-age=3600,public");
 		holder.setInitParameter("resourceBase", "web");
 		servletC.addServlet(holder, "/");
-		servletC.addServlet(new ServletHolder(new ServerDetails()),
-				"/serverdetails");
-		servletC.addServlet(new ServletHolder(new ServerManage()), "/servermanage");
+		servletC.addServlet(new ServletHolder(new ServerList()), "/serverlist");
+		servletC.addServlet(new ServletHolder(new ChannelList()),
+				"/channellist");
+		servletC.addServlet(new ServletHolder(new HandlerList()),
+				"/handlerlist");
+		servletC.addServlet(new ServletHolder(new ServerManage()),
+				"/servermanage");
 		servletC.addServlet(new ServletHolder(new Login()), "/login");
 		servletC.addServlet(new ServletHolder(new Logout()), "/logout");
 		servletC.addServlet(new ServletHolder(new UserCreate()), "/usercreate");
 		servletC.addServlet(new ServletHolder(new UserInfo()), "/userinfo");
 		servletC.addServlet(new ServletHolder(new UserList()), "/userlist");
-		
+
 		server.setHandler(servletC);
 		try {
 			server.start();

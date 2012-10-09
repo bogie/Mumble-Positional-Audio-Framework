@@ -18,11 +18,11 @@ package mpaf.json;
 
 import java.util.Collection;
 
-public class ServerDetailsJson {
+public class ServerListJson {
 	@SuppressWarnings("unused")
 	private Collection<ServerJson> servers;
 
-	public ServerDetailsJson(Collection<ServerJson> servers) {
+	public ServerListJson(Collection<ServerJson> servers) {
 		this.servers = servers;
 	}
 }

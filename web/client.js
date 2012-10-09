@@ -49,7 +49,27 @@ var ErrorCode = {
 		/**
 		 * The rights of the attempting user are too low
 		 */
-		RIGHT_INSUFFICIENT_PERMISSION: 6
+		RIGHT_INSUFFICIENT_PERMISSION: 6,
+
+		/**
+		 * The given handler information is invalid
+		 */
+		HANDLER_INVALID_INFORMATION: 7,
+
+		/**
+		 * Generic ICE Error
+		 */
+		ICE_GENERIC_ERROR: 8,
+
+		/**
+		 * A needed data field was missing from the request
+		 */
+		REQUIRED_FIELD_MISSING: 9,
+		
+		/**
+		 * A needed data field is invalid in the request
+		 */
+		REQUIRED_FIELD_INVALID: 10
 }
 
 var RESULTBOX_FADE_DELAY = 1000;
@@ -158,17 +178,17 @@ function onLogoutResponse(data) {
 	resultbox.fadeIn().delay(RESULTBOX_FADE_DELAY).fadeOut();
 }
 
-function doCreate() {
+function doUserCreate() {
 	$("#usercreate_load").show();
 	$("#usercreate_button").attr("disabled", "disabled");
 	var user = $("#usercreate_user").val();
 	var pass = $("#usercreate_pass").val();
 	var email = $("#usercreate_email").val();
 	var permlvl = $("#usercreate_permlvl").val();
-	$.post("/usercreate", {create_name: user, create_pass: pass, create_email: email, create_permlvl: permlvl},makeGenericCallback(onCreateResponse));
+	$.post("/usercreate", {create_name: user, create_pass: pass, create_email: email, create_permlvl: permlvl},makeGenericCallback(onUserCreateResponse));
 }
 
-function onCreateResponse(data) {
+function onUserCreateResponse(data) {
 	var resultbox = $("#usercreate_result");
 	resultbox.removeClass("errorbox successbox");
 	if(data.success) {
@@ -193,17 +213,17 @@ function onCreateResponse(data) {
 	resultbox.fadeIn().delay(RESULTBOX_FADE_DELAY).fadeOut();
 }
 
-function doManage() {
+function doServerManage() {
 	$("#servermanage_load").show();
 	$("#servermanage_button").attr("disabled", "disabled");
 	var serverid = $("#servermanage_serverid").val();
 	var handlername = $("#servermanage_handlername").val();
 	var gamechannelid = $("#servermanage_gamechannelid").val();
 	var active = $("#servermanage_active").val();
-	$.post("/servermanage", {serverId: serverid, handlerName: handlername, gameChannelId: gamechannelid, activate: active},makeGenericCallback(onManageResponse));
+	$.post("/servermanage", {serverId: serverid, handlerName: handlername, gameChannelId: gamechannelid, activate: active},makeGenericCallback(onServerManageResponse));
 }
 
-function onManageResponse(data) {
+function onServerManageResponse(data) {
 	var resultbox = $("#servermanage_result");
 	resultbox.removeClass("errorbox successbox");
 	if(data.success) {
@@ -225,6 +245,32 @@ function onManageResponse(data) {
 	resultbox.fadeIn().delay(RESULTBOX_FADE_DELAY).fadeOut();
 }
 
+function fetchServerList() {
+	$("#serverdetails_load").show();
+	$("#serverdetails_button").attr("disabled", "disabled");
+	$.get("/serverlist",makeGenericCallback(onServerListResponse));
+}
+
+function onServerListResponse(data) {
+	var resultbox = $("#serverdetails_result");
+	resultbox.removeClass("errorbox successbox");
+	$("#serverdetails_serverlist div").remove();
+	var servers = data.servers;
+	for(sid in data.servers) {
+		$("<div>").attr("id","serverdetails_serverlist_server"+servers[sid].id).appendTo("#serverdetails_serverlist");
+		var server_details = $("<details>").attr("id","serverdetails_serverlist_server"+servers[sid].id+"_root").appendTo("#serverdetails_serverlist_server"+servers[sid].id);
+		var server_summary = $("<summary>").attr("id","serverdetails_serverlist_server"+servers[sid].id+"_root_sum").appendTo(server_details);
+		$("<div>").text(servers[sid].registername).appendTo(server_summary);
+		$("<div>").text("ID: "+servers[sid].id).appendTo(server_details);
+		$("<div>").text("Host: "+servers[sid].host).appendTo(server_details);
+		$("<div>").text("Port: "+servers[sid].port).appendTo(server_details);
+		$("<div>").text("Bandwidth: "+servers[sid].bandwidth).appendTo(server_details);
+		
+	}
+}
+
+// TODO: Implement channel and handler list in a proper way
+/*
 function loadServerDetails() {
 	$("#serverdetails_load").show();
 	$("#serverdetails_button").attr("disabled", "disabled");
@@ -264,11 +310,13 @@ function onServerDetailsResponse(data) {
 	resultbox.fadeIn().delay(RESULTBOX_FADE_DELAY).fadeOut();
 }
 
+*/
+
 function onUserManageFilterChange() {
 	loadUserList($("#usermanage_filter").val());
 }
 
-function loadUserList(filter) {
+function fetchUserList(filter) {
 	$("#usermanage_load").show();
 	$("#usermanage_button").attr("disabled", "disabled");
 	if(filter == undefined || filter == "") {
@@ -318,8 +366,8 @@ function fetchHTML() {
 function loadPage(event) {
 	fetchHTML();
 	checkLoginStatus();
-	loadServerDetails();
-	loadUserList();
+	updateServerDetails();
+	fetchUserList();
 	onHashChanged(event);
 }
 

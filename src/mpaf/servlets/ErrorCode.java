@@ -52,16 +52,26 @@ public enum ErrorCode {
 	 * The rights of the attempting user are too low
 	 */
 	RIGHT_INSUFFICIENT_PERMISSION(6),
-	
+
 	/**
 	 * The given handler information is invalid
 	 */
 	HANDLER_INVALID_INFORMATION(7),
-	
+
 	/**
 	 * Generic ICE Error
 	 */
-	ICE_GENERIC_ERROR(8);
+	ICE_GENERIC_ERROR(8),
+
+	/**
+	 * A needed data field was missing from the request
+	 */
+	REQUIRED_FIELD_MISSING(9),
+
+	/**
+	 * A needed data field is invalid in the request
+	 */
+	REQUIRED_FIELD_INVALID(10);
 
 	private final int code;
 

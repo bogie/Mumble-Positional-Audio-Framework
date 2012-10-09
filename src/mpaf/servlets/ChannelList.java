@@ -18,39 +18,40 @@ package mpaf.servlets;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import mpaf.Logger;
-import mpaf.ServerConfig;
-import mpaf.games.DefaultHandler;
+import mpaf.exceptions.ServiceException;
 import mpaf.ice.ChannelHandler;
 import mpaf.ice.IceModel;
 import mpaf.json.ChannelJson;
-import mpaf.json.HandlerJson;
-import mpaf.json.ServerDetailsJson;
-import mpaf.json.ServerJson;
+import mpaf.json.ChannelListJson;
 import Murmur.Channel;
 import Murmur.InvalidSecretException;
 import Murmur.ServerBootedException;
 
-import com.google.gson.Gson;
-
-public class ServerDetails extends BaseServlet {
-	private static final long serialVersionUID = -1347748214382340423L;
-
-	public ServerDetails() {
-		this.gson = new Gson();
-	}
+public class ChannelList extends BaseServlet {
+	private static final long serialVersionUID = -5655762771993596266L;
 
 	@Override
 	protected void doServiceGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
+			throws ServletException, IOException, ServiceException {
+		if (req.getParameter("sid") == null
+				|| req.getParameter("sid").isEmpty()) {
+			sendError(ErrorCode.REQUIRED_FIELD_MISSING, resp);
+			return;
+		}
+		int sid;
+		try {
+			sid = Integer.parseInt(req.getParameter("sid"));
+		} catch (NumberFormatException e) {
+			sendError(ErrorCode.REQUIRED_FIELD_INVALID, resp);
+			return;
+		}
 		IceModel iceM = (IceModel) this.getServletContext().getAttribute(
 				"iceModel");
 		if (iceM == null) {
@@ -58,30 +59,18 @@ public class ServerDetails extends BaseServlet {
 					"Could not find IceModel! Skipping request.");
 			return;
 		}
-		ArrayList<ServerJson> jsonservers = new ArrayList<ServerJson>();
-		HashMap<Integer, ServerConfig> servers = iceM.getServers();
+		ArrayList<ChannelJson> jsonchannels = new ArrayList<ChannelJson>();
 		ChannelHandler channelH = new ChannelHandler(iceM);
-		for (ServerConfig server : servers.values()) {
-			Map<Integer, Channel> channels = null;
-			try {
-				channels = channelH
-						.getChannels(Integer.parseInt(server.getId()));
-			} catch (InvalidSecretException | ServerBootedException
-					| NumberFormatException e) {
-				e.printStackTrace();
-			}
-			ArrayList<ChannelJson> jsonchannels = new ArrayList<ChannelJson>();
-			for (Channel chan : channels.values()) {
-				jsonchannels.add(new ChannelJson(chan));
-			}
-			ArrayList<HandlerJson> jsonhandlers = new ArrayList<HandlerJson>();
-			for(Entry<String, DefaultHandler> handlerSet : server.getCallback().getHandlers().entrySet())
-			{
-				jsonhandlers.add(new HandlerJson(handlerSet.getKey(),true,handlerSet.getValue().getGameChannel()));
-			}
-
-			jsonservers.add(new ServerJson(server, jsonchannels, jsonhandlers));
+		Map<Integer, Channel> channels;
+		try {
+			channels = channelH.getChannels(sid);
+		} catch (InvalidSecretException | ServerBootedException e) {
+			e.printStackTrace();
+			return;
 		}
-		send(new ServerDetailsJson(jsonservers), resp);
+		for (Channel chan : channels.values()) {
+			jsonchannels.add(new ChannelJson(chan));
+		}
+		send(new ChannelListJson(jsonchannels), resp);
 	}
 }

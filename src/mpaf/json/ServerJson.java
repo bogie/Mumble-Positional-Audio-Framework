@@ -16,8 +16,6 @@
  ******************************************************************************/
 package mpaf.json;
 
-import java.util.Collection;
-
 import mpaf.ServerConfig;
 
 public class ServerJson {
@@ -32,18 +30,12 @@ public class ServerJson {
 	private int port;
 	@SuppressWarnings("unused")
 	private int bandwidth;
-	@SuppressWarnings("unused")
-	private Collection<ChannelJson> channels;
-	@SuppressWarnings("unused")
-	private Collection<HandlerJson> handlers;
 
-	public ServerJson(ServerConfig server, Collection<ChannelJson> channels, Collection<HandlerJson> handlers) {
+	public ServerJson(ServerConfig server) {
 		this.id = Integer.parseInt(server.getId());
 		this.registername = server.getRegistername();
 		this.host = server.getHost();
 		this.port = Integer.parseInt(server.getPort());
 		this.bandwidth = Integer.parseInt(server.getBandwidth());
-		this.channels = channels;
-		this.handlers = handlers;
 	}
 }
