@@ -366,7 +366,7 @@ function fetchHTML() {
 function loadPage(event) {
 	fetchHTML();
 	checkLoginStatus();
-	updateServerDetails();
+	fetchServerList();
 	fetchUserList();
 	onHashChanged(event);
 }
