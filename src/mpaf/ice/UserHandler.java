@@ -35,15 +35,24 @@ public class UserHandler {
 	}
 	
 	public Map<Integer, User> getUsers(Integer serverId) throws InvalidSecretException, ServerBootedException {
-		return this.im.getMeta().getServer(serverId).getUsers();
+		Murmur.ServerPrx server = this.im.getMeta().getServer(serverId);
+		if(server != null)
+			return server.getUsers();
+		else
+			return null;
 	}
 	
 	public void kickUser(Integer serverId, User user, String reason) throws InvalidSecretException, InvalidSessionException, ServerBootedException {
-		this.im.getMeta().getServer(serverId).kickUser(user.session, reason);
+		Murmur.ServerPrx server = this.im.getMeta().getServer(serverId);
+		if(server != null)
+			server.kickUser(user.session, reason);
 	}
 	
 	public void banUser(Integer serverId, User user, String reason) throws InvalidSecretException, ServerBootedException {
-		Ban[] bans = this.im.getMeta().getServer(serverId).getBans();
+		Murmur.ServerPrx server = this.im.getMeta().getServer(serverId);
+		if(server == null)
+			return;
+		Ban[] bans = server.getBans();
 		List<Ban> banlist = Arrays.asList(bans);		
 		Murmur.Ban ban = new Murmur.Ban();
 		ban.address = user.address;
@@ -51,22 +60,28 @@ public class UserHandler {
 		ban.start = (int)new Date().getTime();
 		ban.reason = reason;
 		banlist.add(ban);
-		this.im.getMeta().getServer(serverId).setBans((Ban[]) banlist.toArray());
+		server.setBans((Ban[]) banlist.toArray());
 	}
 	
 	public void removeBan(Integer serverId, String name) throws InvalidSecretException, ServerBootedException {
-		Ban[] bans = this.im.getMeta().getServer(serverId).getBans();
+		Murmur.ServerPrx server = this.im.getMeta().getServer(serverId);
+		if(server == null)
+			return;
+		Ban[] bans = server.getBans();
 		List<Ban> banlist = Arrays.asList(bans);
 		for(Murmur.Ban ban : banlist) {
 			if(ban.name == name) {
 				banlist.remove(ban);
-				this.im.getMeta().getServer(serverId).setBans((Ban[])banlist.toArray());
+				server.setBans((Ban[])banlist.toArray());
 			}
 		}
 	}
 	
 	public List<Ban> getBans(Integer serverId) throws InvalidSecretException, ServerBootedException{
-		Ban[] bans = this.im.getMeta().getServer(serverId).getBans();
+		Murmur.ServerPrx server = this.im.getMeta().getServer(serverId);
+		if(server == null)
+			return null;
+		Ban[] bans = server.getBans();
 		List<Ban> banlist = Arrays.asList(bans);
 		return banlist;
 	}

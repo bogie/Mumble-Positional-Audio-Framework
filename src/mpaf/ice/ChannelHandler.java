@@ -26,19 +26,29 @@ import Murmur.ServerBootedException;
 public class ChannelHandler {
 	IceModel im;
 	
-	public ChannelHandler(IceModel im){
+	public ChannelHandler(IceModel im) {
 		this.im = im;
 	}
 	
-	public Map<Integer, Channel> getChannels(Integer serverId) throws InvalidSecretException, ServerBootedException{
-		return this.im.getMeta().getServer(serverId).getChannels();
+	public Map<Integer, Channel> getChannels(Integer serverId) throws InvalidSecretException, ServerBootedException {
+		Murmur.ServerPrx server = this.im.getMeta().getServer(serverId);
+		if(server != null)
+			return server.getChannels();
+		else
+			return null;
 	}
 	
-	public int addChannel(Integer serverId, String name, Integer parent) throws InvalidChannelException, InvalidSecretException, ServerBootedException{
-		return this.im.getMeta().getServer(serverId).addChannel(name, parent);
+	public int addChannel(Integer serverId, String name, Integer parent) throws InvalidChannelException, InvalidSecretException, ServerBootedException {
+		Murmur.ServerPrx server = this.im.getMeta().getServer(serverId);
+		if(server != null)
+			return server.addChannel(name, parent);
+		else
+			return -1;
 	}
 	
-	public void removeChannel(Integer serverId, Integer channelId) throws InvalidChannelException, InvalidSecretException, ServerBootedException{
-		this.im.getMeta().getServer(serverId).removeChannel(channelId);
+	public void removeChannel(Integer serverId, Integer channelId) throws InvalidChannelException, InvalidSecretException, ServerBootedException {
+		Murmur.ServerPrx server = this.im.getMeta().getServer(serverId);
+		if(server != null)
+			server.removeChannel(channelId);
 	}
 }
