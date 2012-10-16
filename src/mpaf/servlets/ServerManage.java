@@ -26,6 +26,7 @@ import mpaf.ServerConfig;
 import mpaf.exceptions.ServiceException;
 import mpaf.games.Battlefield3Handler;
 import mpaf.games.DefaultHandler;
+import mpaf.games.HandlerType;
 import mpaf.ice.IceModel;
 
 import Murmur.InvalidChannelException;
@@ -63,10 +64,15 @@ public class ServerManage extends BaseServlet {
 		
 		// generic parameters
 		int serverId = Integer.parseInt(req.getParameter("serverId"));
-		String handlerName = req.getParameter("handlerName");
+		HandlerType handlerType = null;
+		for(HandlerType hType : HandlerType.values())
+		{
+			if(hType.getCode() == req.getParameter("handlerType"))
+				handlerType = hType;
+		}
 		
 		ServerConfig sc = iceM.getServers().get(serverId);
-		DefaultHandler handler = sc.getCallback().getHandlers().get(handlerName);
+		DefaultHandler handler = sc.getCallback().getHandlers().get(handlerType);
 		if(handler != null)
 		{
 			// Handler exists, either set new gameChannelId or activate/deactivate handler
@@ -76,7 +82,7 @@ public class ServerManage extends BaseServlet {
 				{
 					// defining new gameChannel
 					int gameChannelId = Integer.parseInt(req.getParameter("gameChannelId"));
-					Logger.debug(this.getClass(),"Set new GameChannel: "+gameChannelId+" for game: "+handlerName);
+					Logger.debug(this.getClass(),"Set new GameChannel: "+gameChannelId+" for game: "+handlerType);
 					handler.setGameChannel(gameChannelId);
 					sendSuccess(resp);
 					return;
@@ -105,9 +111,9 @@ public class ServerManage extends BaseServlet {
 			if(req.getParameter("gameChannelId") != null)
 			{
 				int gameChannelId = Integer.parseInt(req.getParameter("gameChannelId"));
-				Logger.debug(this.getClass(),"Trying to create a new GameHandler gamechannelid: "+gameChannelId+" handlername: "+handlerName);
+				Logger.debug(this.getClass(),"Trying to create a new GameHandler gamechannelid: "+gameChannelId+" handlername: "+handlerType);
 				try {
-					if(createGameHandler(serverId, handlerName, gameChannelId))
+					if(createGameHandler(serverId, handlerType, gameChannelId))
 						sendSuccess(resp);
 					else
 						sendError(ErrorCode.HANDLER_INVALID_INFORMATION, resp);
@@ -124,7 +130,7 @@ public class ServerManage extends BaseServlet {
 		}
 	}
 	
-	private boolean createGameHandler(int serverId, String handlerName, int gameChannelId) throws InvalidSecretException, ServerBootedException, InvalidChannelException {
+	private boolean createGameHandler(int serverId, HandlerType handlerType, int gameChannelId) throws InvalidSecretException, ServerBootedException, InvalidChannelException {
 		IceModel iceM = (IceModel) this.getServletContext().getAttribute(
 				"iceModel");
 		if (iceM == null) {
@@ -135,16 +141,17 @@ public class ServerManage extends BaseServlet {
 		Murmur.ServerPrx server = iceM.getMeta().getServer(serverId);
 		ServerConfig sc = iceM.getServers().get(serverId);
 		DefaultHandler handler = null;
-		if(handlerName.equalsIgnoreCase("Battlefield 3"))
+		switch(handlerType)
 		{
-			handler = new Battlefield3Handler(server);
-			Logger.debug(this.getClass(),"New BF3Handler is: "+handler);
-		} else {
-			Logger.debug(this.getClass(),"Tried to create unsupported GameHandler");
-			return false;
+			case BATTLEFIELD3:
+				handler = new Battlefield3Handler(server);
+				Logger.debug(this.getClass(),"New BF3Handler is: "+handler);
+			default:
+				Logger.debug(this.getClass(), "Could not create handler for type: "+handlerType);
 		}
 		handler.setGameChannel(gameChannelId);
-		sc.getCallback().getHandlers().put(handlerName, handler);
+		handler.init(conn);
+		sc.getCallback().getHandlers().put(handlerType, handler);
 		return true;
 	}
 }

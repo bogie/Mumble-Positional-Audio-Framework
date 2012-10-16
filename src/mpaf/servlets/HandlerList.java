@@ -28,6 +28,7 @@ import mpaf.Logger;
 import mpaf.ServerConfig;
 import mpaf.exceptions.ServiceException;
 import mpaf.games.DefaultHandler;
+import mpaf.games.HandlerType;
 import mpaf.ice.IceModel;
 import mpaf.json.HandlerJson;
 import mpaf.json.HandlerListJson;
@@ -59,7 +60,7 @@ public class HandlerList extends BaseServlet {
 		}
 		ServerConfig server = iceM.getServers().get(sid);
 		ArrayList<HandlerJson> jsonhandlers = new ArrayList<HandlerJson>();
-		for (Entry<String, DefaultHandler> handlerSet : server.getCallback()
+		for (Entry<HandlerType, DefaultHandler> handlerSet : server.getCallback()
 				.getHandlers().entrySet()) {
 			jsonhandlers.add(new HandlerJson(handlerSet.getKey(), true,
 					handlerSet.getValue().getGameChannel()));

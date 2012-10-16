@@ -16,19 +16,29 @@
  ******************************************************************************/
 package mpaf.ice;
 
+import java.lang.reflect.InvocationTargetException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import mpaf.Logger;
 import mpaf.ServerConfig;
+import mpaf.games.DefaultHandler;
 import Ice.InitializationData;
 import Ice.Util;
 import Murmur.InvalidCallbackException;
+import Murmur.InvalidChannelException;
 import Murmur.InvalidSecretException;
 import Murmur.ServerBootedException;
 
 public class IceController {
 	private IceModel im;
+	private Connection conn;
 
-	public IceController(IceModel im) {
+	public IceController(IceModel im, Connection conn) {
 		this.im = im;
+		this.conn = conn;
 		initialize();
 	}
 
@@ -73,6 +83,46 @@ public class IceController {
 				ServerConfig sc = new ServerConfig(server, im.getMeta()
 						.getDefaultConf());
 				ServerCallbackI cb = new ServerCallbackI(server, im);
+				try {
+					PreparedStatement stmt = this.conn
+							.prepareStatement("SELECT serverId, handlerName, gameChannelId, active FROM game_handlers");
+					ResultSet res = stmt.executeQuery();
+					while(res.next()) {
+						Class<?> hClass = Class.forName(res.getString("handlerName"));
+						Object hObj = hClass.getConstructor(Murmur.ServerPrx.class).newInstance(server);
+						DefaultHandler handler = (DefaultHandler) hObj;
+						handler.init(conn);
+						handler.setGameChannel(res.getInt("gameChannelId"));
+						cb.getHandlers().put(handler.getHandlerType(), handler);
+						Logger.debug(this.getClass(),"Created handler: "+res.getString("handlerName"));
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
+				} catch (InstantiationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IllegalArgumentException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (InvocationTargetException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (NoSuchMethodException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SecurityException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (InvalidChannelException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				sc.setCallback(cb);
 				im.getServers().put(server.id(), sc);
 

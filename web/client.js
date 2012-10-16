@@ -72,6 +72,17 @@ var ErrorCode = {
 		REQUIRED_FIELD_INVALID: 10
 }
 
+var HandlerType = {
+		/**
+		 * Unkown
+		 */
+		UNKNOWN: "UNKN",
+		/**
+		 * Battlefield 3
+		 */
+		BATTLEFIELD3: "Battlefield3"
+}
+
 var RESULTBOX_FADE_DELAY = 1000;
 
 var loginState = false;
@@ -265,7 +276,6 @@ function onServerListResponse(data) {
 		$("<div>").text("Host: "+servers[sid].host).appendTo(server_details);
 		$("<div>").text("Port: "+servers[sid].port).appendTo(server_details);
 		$("<div>").text("Bandwidth: "+servers[sid].bandwidth).appendTo(server_details);
-		
 	}
 }
 

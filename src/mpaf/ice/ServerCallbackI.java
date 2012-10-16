@@ -21,6 +21,7 @@ import java.util.Map;
 
 import mpaf.Logger;
 import mpaf.games.DefaultHandler;
+import mpaf.games.HandlerType;
 import Ice.Current;
 import Murmur.Channel;
 import Murmur.InvalidChannelException;
@@ -35,7 +36,7 @@ public class ServerCallbackI extends Murmur._ServerCallbackDisp {
 	private Murmur.ServerPrx server;
 	@SuppressWarnings("unused")
 	private IceModel im;
-	private Map<String, DefaultHandler> handlers = new HashMap<String, DefaultHandler>();
+	private Map<HandlerType, DefaultHandler> handlers = new HashMap<HandlerType, DefaultHandler>();
 
 	public ServerCallbackI(Murmur.ServerPrx server,IceModel im) {
 		this.server = server;
@@ -80,7 +81,12 @@ public class ServerCallbackI extends Murmur._ServerCallbackDisp {
 			String gamename = splitcontext[0];
 			Logger.debug(this.getClass(), gamename);
 			// Get GameHandler from HashMap
-			DefaultHandler handler = handlers.get(gamename);
+			DefaultHandler handler = null;
+			for(HandlerType hType : HandlerType.values())
+			{
+				if(hType.getCode() == gamename)
+					handler = handlers.get(hType);
+			}
 
 			// Check if GameHandler exists
 			if (handler == null) {
@@ -125,11 +131,11 @@ public class ServerCallbackI extends Murmur._ServerCallbackDisp {
 
 	}
 
-	public Map<String, DefaultHandler> getHandlers() {
+	public Map<HandlerType, DefaultHandler> getHandlers() {
 		return handlers;
 	}
 
-	public void setHandlers(Map<String, DefaultHandler> handlers) {
+	public void setHandlers(Map<HandlerType, DefaultHandler> handlers) {
 		this.handlers = handlers;
 	}
 

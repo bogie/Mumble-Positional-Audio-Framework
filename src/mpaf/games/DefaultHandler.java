@@ -17,6 +17,9 @@
 package mpaf.games;
 
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -34,16 +37,48 @@ import Murmur.User;
 
 public class DefaultHandler implements GameHandler {
 	Murmur.ServerPrx server;
+	Connection sqlC;
 	int game_channel_id = 0;
 	Tree gameTree = null;
 	boolean active = true;
 	
+	@Override
+	public void init(Connection conn) {
+		this.sqlC = conn;
+	}
+	
 	public void activate() {
 		this.active = true;
+		try {
+			PreparedStatement pst = sqlC
+					.prepareStatement("UPDATE game_handlers SET active = 1 WHERE serverId = ? AND handlerName = ? AND gameChannelId = ?");
+			pst.setInt(1, server.id());
+			pst.setString(2, this.getClass().getName());
+			pst.setInt(3, game_channel_id);
+			pst.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (InvalidSecretException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public void deactivate() {
 		this.active = false;
+		try {
+			PreparedStatement pst = sqlC
+					.prepareStatement("UPDATE game_handlers SET active = 0 WHERE serverId = '?' AND handlerName = '?' AND gameChannelId = '?'");
+			pst.setInt(1, server.id());
+			pst.setString(2, this.getClass().getName());
+			pst.setInt(3, game_channel_id);
+			pst.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (InvalidSecretException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public boolean isActive() {
@@ -135,6 +170,23 @@ public class DefaultHandler implements GameHandler {
 	public void setGameChannel(int channelId) throws InvalidSecretException, ServerBootedException, InvalidChannelException {
 		this.game_channel_id = channelId;
 		updateGameTree();
+		try {
+			PreparedStatement pst = sqlC
+					.prepareStatement("UPDATE game_handlers SET gameChannelId = ? WHERE serverId = ? AND handlerName = ?");
+			pst.setInt(1, game_channel_id);
+			pst.setInt(2, server.id());
+			pst.setString(3, this.getClass().getName());
+			pst.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (InvalidSecretException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
+	public HandlerType getHandlerType() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

@@ -289,5 +289,9 @@ public class Battlefield3Handler extends DefaultHandler {
 		}
 
 	}
-
+	
+	@Override
+	public HandlerType getHandlerType() {
+		return HandlerType.BATTLEFIELD3;
+	}
 }

@@ -14,22 +14,23 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with MPAF.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package mpaf.json;
+package mpaf.games;
 
-import mpaf.games.HandlerType;
-
-public class HandlerJson {
-
-	@SuppressWarnings("unused")
-	private HandlerType handlerType;
-	@SuppressWarnings("unused")
-	private boolean enabled;
-	@SuppressWarnings("unused")
-	private int gameChannelId;
+public enum HandlerType {
 	
-	public HandlerJson(HandlerType handlerType, boolean enabled, int gameChannelId) {
-		this.handlerType= handlerType;
-		this.enabled = enabled;
-		this.gameChannelId = gameChannelId;
+	UNKNOWN("UNKN"),
+	/**
+	 * Battlefield 3
+	 */
+	BATTLEFIELD3("Battlefield3");
+	
+	private final String code;
+
+	private HandlerType(String code) {
+		this.code = code;
+	}
+
+	public String getCode() {
+		return this.code;
 	}
 }

@@ -62,8 +62,19 @@ public class Main {
 			e1.printStackTrace();
 		}
 
+		SqlightHandler sqlH = null;
+		try {
+			sqlH = new SqlightHandler();
+		} catch (ClassNotFoundException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+		
+		if(sqlH == null)
+			return;
+		
 		IceModel iceM = new IceModel(config);
-		IceController iceC = new IceController(iceM);
+		IceController iceC = new IceController(iceM, sqlH.getConnection());
 
 		Server server = new Server();
 

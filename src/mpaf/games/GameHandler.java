@@ -16,6 +16,8 @@
  ******************************************************************************/
 package mpaf.games;
 
+import java.sql.Connection;
+
 import mpaf.json.ContextJson;
 import mpaf.json.IdentityJson;
 import Murmur.Channel;
@@ -28,6 +30,12 @@ import Murmur.User;
 
 public interface GameHandler {
 
+	/**
+	 * Generic initialization mainly for inserting SQL data
+	 * @param SqlightHandler
+	 */
+	public void init(Connection conn);
+	
 	/**
 	 * Handles every callback event, parses json data and calls moveUser()
 	 * @param state User state from ICE callback
