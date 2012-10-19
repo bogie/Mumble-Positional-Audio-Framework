@@ -65,7 +65,7 @@ public class ServerCallbackI extends Murmur._ServerCallbackDisp {
 			// split context with null terminated character
 			String[] splitcontext = state.context.split("\0");
 			if (splitcontext.length < 1) {
-				for (DefaultHandler handler : handlers.values()) {
+				/*for (DefaultHandler handler : handlers.values()) {
 					if (handler.isUserInGameChannel(state)) {
 						// return user back to the root game channel
 						Logger.debug(this.getClass(), "Returning user back to gameChannel");
@@ -73,7 +73,7 @@ public class ServerCallbackI extends Murmur._ServerCallbackDisp {
 						server.setState(state);
 						return;
 					}
-				}
+				}*/
 				return;
 			}
 
