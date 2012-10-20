@@ -41,7 +41,6 @@ import org.eclipse.jetty.servlet.ServletHolder;
 
 public class Main {
 	public static void main(String[] args) {
-
 		// Apache commons configuration
 		CompositeConfiguration config = new CompositeConfiguration();
 		try {

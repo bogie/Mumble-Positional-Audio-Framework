@@ -17,6 +17,9 @@
 package mpaf.servlets;
 
 import java.io.IOException;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -62,10 +65,15 @@ public class UserCreate extends BaseServlet {
 			ResultSet rescheck = stmtcheck.executeQuery();
 			if (rescheck.next())
 				throw new ServiceException(ErrorCode.CREATE_NAME_TAKEN);
+			MessageDigest md = MessageDigest.getInstance("SHA-512");
+			String saltedPass = user+":"+pass;
+			md.update(saltedPass.getBytes());
+			byte[] byteBuffer = md.digest();
+			String passHash = String.format("%0128x", new BigInteger(1, byteBuffer));
 			PreparedStatement stmtcreate = conn
 					.prepareStatement("INSERT INTO users (name,password, email, permissionlevel) VALUES (?,?,?,?)");
 			stmtcreate.setString(1, user);
-			stmtcreate.setString(2, pass);
+			stmtcreate.setString(2, passHash);
 			stmtcreate.setString(3, email);
 			stmtcreate.setInt(4, permlvl);
 			stmtcreate.execute();
@@ -73,6 +81,9 @@ public class UserCreate extends BaseServlet {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new ServiceException(ErrorCode.INTERNAL_ERROR);
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 }

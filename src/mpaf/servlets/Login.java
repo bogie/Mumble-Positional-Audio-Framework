@@ -17,6 +17,9 @@
 package mpaf.servlets;
 
 import java.io.IOException;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -56,7 +59,12 @@ public class Login extends BaseServlet {
 			PreparedStatement stmt = conn
 					.prepareStatement("SELECT id, email, permissionlevel FROM users WHERE name=? AND password=?");
 			stmt.setString(1, user);
-			stmt.setString(2, pass);
+			MessageDigest md = MessageDigest.getInstance("SHA-512");
+			String saltedPass = user+":"+pass;
+			md.update(saltedPass.getBytes());
+			byte[] byteBuffer = md.digest();
+			String passHash = String.format("%0128x", new BigInteger(1, byteBuffer));
+			stmt.setString(2, passHash);
 			ResultSet res = stmt.executeQuery();
 			// If the user with that password has been found, create user object
 			// with permission
@@ -67,6 +75,9 @@ public class Login extends BaseServlet {
 			// Or not...
 			return null;
 		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new ServiceException(ErrorCode.INTERNAL_ERROR);
+		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 			throw new ServiceException(ErrorCode.INTERNAL_ERROR);
 		}
