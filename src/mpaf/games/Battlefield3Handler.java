@@ -17,18 +17,13 @@
 package mpaf.games;
 
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import mpaf.Logger;
 import mpaf.json.ContextJson;
 import mpaf.json.IdentityJson;
 import mpaf.shared.StringUtils;
-import Ice.BooleanHolder;
-import Murmur.ACL;
-import Murmur.ACLListHolder;
 import Murmur.Channel;
-import Murmur.GroupListHolder;
 import Murmur.InvalidChannelException;
 import Murmur.InvalidSecretException;
 import Murmur.InvalidSessionException;
@@ -261,33 +256,6 @@ public class Battlefield3Handler extends DefaultHandler {
 			e.printStackTrace();
 		}
 		return false;
-
-	}
-
-	@Override
-	public void addACLtoChannel(int channelid, ACL acl)
-			throws InvalidSecretException, ServerBootedException {
-		try {
-			// create variable holders
-			ACLListHolder acls = new ACLListHolder();
-			GroupListHolder groups = new GroupListHolder();
-			BooleanHolder inherited = new BooleanHolder();
-
-			// fill variable holders
-			server.getACL(channelid, acls, groups, inherited);
-
-			// append ACL
-			ArrayList<Murmur.ACL> aclList = new ArrayList<Murmur.ACL>();
-			for (Murmur.ACL a : acls.value) {
-				aclList.add(a);
-			}
-			aclList.add(acl);
-			server.setACL(channelid, aclList.toArray(new ACL[aclList.size()]),
-					groups.value, inherited.value);
-		} catch (InvalidChannelException e) {
-			e.printStackTrace();
-		}
-
 	}
 	
 	@Override

@@ -64,7 +64,11 @@ public class ChannelList extends BaseServlet {
 		Map<Integer, Channel> channels;
 		try {
 			channels = channelH.getChannels(sid);
-		} catch (InvalidSecretException | ServerBootedException e) {
+		} catch (InvalidSecretException e) {
+			e.printStackTrace();
+			return;
+		} catch (ServerBootedException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return;
 		}

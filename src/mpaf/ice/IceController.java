@@ -91,8 +91,7 @@ public class IceController {
 						Class<?> hClass = Class.forName(res.getString("handlerName"));
 						Object hObj = hClass.getConstructor(Murmur.ServerPrx.class).newInstance(server);
 						DefaultHandler handler = (DefaultHandler) hObj;
-						handler.init(conn);
-						handler.setGameChannel(res.getInt("gameChannelId"));
+						handler.init(conn,res.getInt("gameChannelId"));
 						cb.getHandlers().put(handler.getHandlerType(), handler);
 						Logger.debug(this.getClass(),"Created handler: "+res.getString("handlerName"));
 					}
@@ -117,9 +116,6 @@ public class IceController {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (ClassNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (InvalidChannelException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}

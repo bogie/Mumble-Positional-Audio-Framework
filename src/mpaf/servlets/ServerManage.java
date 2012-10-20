@@ -101,8 +101,17 @@ public class ServerManage extends BaseServlet {
 					sendError(ErrorCode.HANDLER_INVALID_INFORMATION, resp);
 					return;
 				}
-			} catch (InvalidSecretException | ServerBootedException
-					| InvalidChannelException e) {
+			} catch (InvalidSecretException e) {
+				e.printStackTrace();
+				sendError(ErrorCode.ICE_GENERIC_ERROR, resp);
+				return;
+			} catch (ServerBootedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				sendError(ErrorCode.ICE_GENERIC_ERROR, resp);
+				return;
+			} catch (InvalidChannelException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 				sendError(ErrorCode.ICE_GENERIC_ERROR, resp);
 				return;
@@ -118,7 +127,17 @@ public class ServerManage extends BaseServlet {
 					else
 						sendError(ErrorCode.HANDLER_INVALID_INFORMATION, resp);
 					return;
-				} catch (InvalidChannelException | InvalidSecretException | ServerBootedException e) {
+				} catch (InvalidChannelException e) {
+					e.printStackTrace();
+					sendError(ErrorCode.ICE_GENERIC_ERROR, resp);
+					return;
+				} catch (InvalidSecretException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					sendError(ErrorCode.ICE_GENERIC_ERROR, resp);
+					return;
+				} catch (ServerBootedException e) {
+					// TODO Auto-generated catch block
 					e.printStackTrace();
 					sendError(ErrorCode.ICE_GENERIC_ERROR, resp);
 					return;
@@ -149,8 +168,7 @@ public class ServerManage extends BaseServlet {
 			default:
 				Logger.debug(this.getClass(), "Could not create handler for type: "+handlerType);
 		}
-		handler.setGameChannel(gameChannelId);
-		handler.init(conn);
+		handler.init(conn, gameChannelId);
 		sc.getCallback().getHandlers().put(handlerType, handler);
 		return true;
 	}

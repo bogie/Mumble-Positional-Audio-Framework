@@ -33,6 +33,7 @@ import Murmur.User;
 public class ServerCallbackI extends Murmur._ServerCallbackDisp {
 	private static final long serialVersionUID = -666110379922768625L;
 
+	@SuppressWarnings("unused")
 	private Murmur.ServerPrx server;
 	@SuppressWarnings("unused")
 	private IceModel im;

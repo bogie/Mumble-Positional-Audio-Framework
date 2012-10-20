@@ -26,8 +26,11 @@ import java.util.List;
 import mpaf.Logger;
 import mpaf.json.ContextJson;
 import mpaf.json.IdentityJson;
+import Ice.BooleanHolder;
 import Murmur.ACL;
+import Murmur.ACLListHolder;
 import Murmur.Channel;
+import Murmur.GroupListHolder;
 import Murmur.InvalidChannelException;
 import Murmur.InvalidSecretException;
 import Murmur.InvalidSessionException;
@@ -43,8 +46,22 @@ public class DefaultHandler implements GameHandler {
 	boolean active = true;
 	
 	@Override
-	public void init(Connection conn) {
+	public void init(Connection conn, int gameChannelId) {
 		this.sqlC = conn;
+		try {
+			PreparedStatement pst = sqlC
+					.prepareStatement("INSERT REPLACE INTO game_handlers (serverId, handlerName, gameChannelId, active) VALUES (?, ?, ?, ?)");
+			pst.setInt(1, server.id());
+			pst.setString(2, this.getClass().getName());
+			pst.setInt(3, game_channel_id);
+			pst.setInt(4, 1);
+			pst.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (InvalidSecretException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public void activate() {
@@ -158,8 +175,24 @@ public class DefaultHandler implements GameHandler {
 	@Override
 	public void addACLtoChannel(int channelid, ACL acl)
 			throws InvalidSecretException, ServerBootedException {
-		// TODO Auto-generated method stub
+		try {
+			// create variable holders
+			ACLListHolder acls = new ACLListHolder();
+			GroupListHolder groups = new GroupListHolder();
+			BooleanHolder inherited = new BooleanHolder();
 
+			// fill variable holders
+			server.getACL(channelid, acls, groups, inherited);
+
+			// append ACL
+			List<Murmur.ACL> aclList = Arrays.asList(acls.value);
+			aclList.add(acl);
+			
+			server.setACL(channelid, aclList.toArray(new ACL[aclList.size()]),
+					groups.value, inherited.value);
+		} catch (InvalidChannelException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public int getGameChannel() {

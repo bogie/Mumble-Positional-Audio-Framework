@@ -32,9 +32,10 @@ public interface GameHandler {
 
 	/**
 	 * Generic initialization mainly for inserting SQL data
-	 * @param SqlightHandler
+	 * @param Connection conn - SQLight connection
+	 * @param int gameChannelId - channel this handler is responsible for
 	 */
-	public void init(Connection conn);
+	public void init(Connection conn, int gameChannelId);
 	
 	/**
 	 * Handles every callback event, parses json data and calls moveUser()
