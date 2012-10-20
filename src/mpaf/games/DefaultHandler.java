@@ -48,9 +48,23 @@ public class DefaultHandler implements GameHandler {
 	@Override
 	public void init(Connection conn, int gameChannelId) {
 		this.sqlC = conn;
+		this.game_channel_id = gameChannelId;
+		try {
+			updateGameTree();
+		} catch (InvalidSecretException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (ServerBootedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+	
+	@Override
+	public void addToDatabase() {
 		try {
 			PreparedStatement pst = sqlC
-					.prepareStatement("INSERT REPLACE INTO game_handlers (serverId, handlerName, gameChannelId, active) VALUES (?, ?, ?, ?)");
+					.prepareStatement("INSERT OR REPLACE INTO game_handlers (serverId, handlerName, gameChannelId, active) VALUES (?, ?, ?, ?)");
 			pst.setInt(1, server.id());
 			pst.setString(2, this.getClass().getName());
 			pst.setInt(3, game_channel_id);

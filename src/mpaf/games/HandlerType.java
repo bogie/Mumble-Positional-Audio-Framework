@@ -33,4 +33,11 @@ public enum HandlerType {
 	public String getCode() {
 		return this.code;
 	}
+	
+	public static HandlerType getByString(String s) {
+		for(HandlerType t : HandlerType.values())
+			if(t.getCode().equalsIgnoreCase(s))
+				return t;
+		return UNKNOWN;
+	}
 }

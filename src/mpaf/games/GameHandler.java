@@ -31,11 +31,17 @@ import Murmur.User;
 public interface GameHandler {
 
 	/**
-	 * Generic initialization mainly for inserting SQL data
+	 * Generic initialization mainly for passing SQLite Connection and defining gameChannel
 	 * @param Connection conn - SQLight connection
 	 * @param int gameChannelId - channel this handler is responsible for
 	 */
 	public void init(Connection conn, int gameChannelId);
+
+	/**
+	 * Adds the GameHandler to the sqlite database
+	 * note: requires you to init() first.
+	 */
+	public void addToDatabase();
 	
 	/**
 	 * Handles every callback event, parses json data and calls moveUser()

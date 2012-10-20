@@ -64,12 +64,8 @@ public class ServerManage extends BaseServlet {
 		
 		// generic parameters
 		int serverId = Integer.parseInt(req.getParameter("serverId"));
-		HandlerType handlerType = null;
-		for(HandlerType hType : HandlerType.values())
-		{
-			if(hType.getCode() == req.getParameter("handlerType"))
-				handlerType = hType;
-		}
+		Logger.debug(this.getClass(), "Trying to find handlerType for handlerTypeName: "+req.getParameter("handlerName"));
+		HandlerType handlerType = HandlerType.getByString(req.getParameter("handlerName"));
 		
 		ServerConfig sc = iceM.getServers().get(serverId);
 		DefaultHandler handler = sc.getCallback().getHandlers().get(handlerType);
@@ -149,6 +145,7 @@ public class ServerManage extends BaseServlet {
 		}
 	}
 	
+	@SuppressWarnings("null")
 	private boolean createGameHandler(int serverId, HandlerType handlerType, int gameChannelId) throws InvalidSecretException, ServerBootedException, InvalidChannelException {
 		IceModel iceM = (IceModel) this.getServletContext().getAttribute(
 				"iceModel");
@@ -160,15 +157,17 @@ public class ServerManage extends BaseServlet {
 		Murmur.ServerPrx server = iceM.getMeta().getServer(serverId);
 		ServerConfig sc = iceM.getServers().get(serverId);
 		DefaultHandler handler = null;
-		switch(handlerType)
-		{
+		switch(handlerType)	{
 			case BATTLEFIELD3:
 				handler = new Battlefield3Handler(server);
 				Logger.debug(this.getClass(),"New BF3Handler is: "+handler);
+			case UNKNOWN:
+				return false;
 			default:
 				Logger.debug(this.getClass(), "Could not create handler for type: "+handlerType);
 		}
 		handler.init(conn, gameChannelId);
+		handler.addToDatabase();
 		sc.getCallback().getHandlers().put(handlerType, handler);
 		return true;
 	}

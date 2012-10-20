@@ -28,7 +28,6 @@ import mpaf.games.DefaultHandler;
 import Ice.InitializationData;
 import Ice.Util;
 import Murmur.InvalidCallbackException;
-import Murmur.InvalidChannelException;
 import Murmur.InvalidSecretException;
 import Murmur.ServerBootedException;
 
@@ -85,7 +84,8 @@ public class IceController {
 				ServerCallbackI cb = new ServerCallbackI(server, im);
 				try {
 					PreparedStatement stmt = this.conn
-							.prepareStatement("SELECT serverId, handlerName, gameChannelId, active FROM game_handlers");
+							.prepareStatement("SELECT serverId, handlerName, gameChannelId, active FROM game_handlers WHERE serverId = ?");
+					stmt.setInt(1, server.id());
 					ResultSet res = stmt.executeQuery();
 					while(res.next()) {
 						Class<?> hClass = Class.forName(res.getString("handlerName"));
