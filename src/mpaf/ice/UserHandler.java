@@ -18,6 +18,7 @@ package mpaf.ice;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -53,7 +54,7 @@ public class UserHandler {
 		if(server == null)
 			return;
 		Ban[] bans = server.getBans();
-		List<Ban> banlist = Arrays.asList(bans);		
+		List<Ban> banlist = new LinkedList<Ban>(Arrays.asList(bans));		
 		Murmur.Ban ban = new Murmur.Ban();
 		ban.address = user.address;
 		ban.name = user.name;
@@ -68,7 +69,7 @@ public class UserHandler {
 		if(server == null)
 			return;
 		Ban[] bans = server.getBans();
-		List<Ban> banlist = Arrays.asList(bans);
+		List<Ban> banlist = new LinkedList<Ban>(Arrays.asList(bans));
 		for(Murmur.Ban ban : banlist) {
 			if(ban.name == name) {
 				banlist.remove(ban);
@@ -82,7 +83,7 @@ public class UserHandler {
 		if(server == null)
 			return null;
 		Ban[] bans = server.getBans();
-		List<Ban> banlist = Arrays.asList(bans);
+		List<Ban> banlist = new LinkedList<Ban>(Arrays.asList(bans));
 		return banlist;
 	}
 }

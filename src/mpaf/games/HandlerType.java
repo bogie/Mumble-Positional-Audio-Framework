@@ -22,7 +22,7 @@ public enum HandlerType {
 	/**
 	 * Battlefield 3
 	 */
-	BATTLEFIELD3("Battlefield3");
+	BATTLEFIELD3("Battlefield 3");
 	
 	private final String code;
 

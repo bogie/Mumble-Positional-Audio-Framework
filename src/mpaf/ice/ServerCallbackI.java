@@ -85,7 +85,7 @@ public class ServerCallbackI extends Murmur._ServerCallbackDisp {
 			DefaultHandler handler = null;
 			for(HandlerType hType : HandlerType.values())
 			{
-				if(hType.getCode() == gamename)
+				if(hType.getCode().equalsIgnoreCase(gamename))
 					handler = handlers.get(hType);
 			}
 

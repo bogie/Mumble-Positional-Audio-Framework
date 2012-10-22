@@ -21,6 +21,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import mpaf.Logger;
@@ -199,7 +200,7 @@ public class DefaultHandler implements GameHandler {
 			server.getACL(channelid, acls, groups, inherited);
 
 			// append ACL
-			List<Murmur.ACL> aclList = Arrays.asList(acls.value);
+			List<ACL> aclList = new LinkedList<ACL>(Arrays.asList(acls.value));
 			aclList.add(acl);
 			
 			server.setACL(channelid, aclList.toArray(new ACL[aclList.size()]),
