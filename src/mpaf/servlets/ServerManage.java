@@ -161,7 +161,9 @@ public class ServerManage extends BaseServlet {
 			case BATTLEFIELD3:
 				handler = new Battlefield3Handler(server);
 				Logger.debug(this.getClass(),"New BF3Handler is: "+handler);
+				break;
 			case UNKNOWN:
+				Logger.debug(this.getClass(), "Failed to create handler with type: "+handlerType.getCode());
 				return false;
 			default:
 				Logger.debug(this.getClass(), "Could not create handler for type: "+handlerType);
