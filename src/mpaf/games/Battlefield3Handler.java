@@ -103,7 +103,7 @@ public class Battlefield3Handler extends DefaultHandler {
 
 			if (state.channel != this.gameTree.c.id) {
 				state.channel = this.gameTree.c.id;
-				server.setState(state);
+				//server.setState(state);
 			}
 		} else {
 			Gson gson = new Gson();

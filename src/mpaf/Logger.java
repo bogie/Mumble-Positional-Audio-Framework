@@ -16,41 +16,67 @@
  ******************************************************************************/
 package mpaf;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.lang.management.ManagementFactory;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.text.SimpleDateFormat;
 
 public class Logger {
 
 	public static final String format = "dd.MM.yyyy HH:mm:ss";
+	
+	private static void logToFile(String msg) {
+		long uptime = ManagementFactory.getRuntimeMXBean().getStartTime();
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy-HH-mm-ss");
+		String timestamp = sdf.format(uptime);
+		Path path = Paths.get("mpaf-"+timestamp+".log");
+		try(BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8,StandardOpenOption.APPEND,StandardOpenOption.CREATE)) {
+			writer.write(msg);
+			writer.newLine();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 	@SuppressWarnings("rawtypes")
 	public static void debug(Class clazz, String msg) {
 		SimpleDateFormat sdf = new SimpleDateFormat(format);
 		String timestamp = sdf.format(System.currentTimeMillis());
-		System.out.println(timestamp + " DEBUG " + clazz.getSimpleName() + ": "
-				+ msg);
+		String outmsg = timestamp + " DEBUG " + clazz.getSimpleName() + ": " + msg;
+		System.out.println(outmsg);
+		logToFile(outmsg);
 	}
 
 	@SuppressWarnings("rawtypes")
 	public static void info(Class clazz, String msg) {
 		SimpleDateFormat sdf = new SimpleDateFormat(format);
 		String timestamp = sdf.format(System.currentTimeMillis());
-		System.out.println(timestamp + " INFO " + clazz.getSimpleName() + ": "
-				+ msg);
+		String outmsg = timestamp + " INFO " + clazz.getSimpleName() + ": " + msg;
+		System.out.println(outmsg);
+		logToFile(outmsg);
 	}
 
 	@SuppressWarnings("rawtypes")
 	public static void error(Class clazz, String msg) {
 		SimpleDateFormat sdf = new SimpleDateFormat(format);
 		String timestamp = sdf.format(System.currentTimeMillis());
-		System.out.println(timestamp + " ERROR " + clazz.getSimpleName() + ": "
-				+ msg);
+		String outmsg = timestamp + " ERROR " + clazz.getSimpleName() + ": " + msg;
+		System.out.println(outmsg);
+		logToFile(outmsg);
 	}
 
 	@SuppressWarnings("rawtypes")
 	public static void fatal(Class clazz, String msg) {
 		SimpleDateFormat sdf = new SimpleDateFormat(format);
 		String timestamp = sdf.format(System.currentTimeMillis());
-		System.out.println(timestamp + " FATAL " + clazz.getSimpleName() + ": "
-				+ msg);
+		String outmsg = timestamp + " FATAL " + clazz.getSimpleName() + ": " + msg;
+		System.out.println(outmsg);
+		logToFile(outmsg);
 	}
 }

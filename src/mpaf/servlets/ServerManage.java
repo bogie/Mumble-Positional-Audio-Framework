@@ -28,6 +28,7 @@ import mpaf.games.Battlefield3Handler;
 import mpaf.games.DefaultHandler;
 import mpaf.games.HandlerType;
 import mpaf.ice.IceModel;
+import mpaf.sql.SqlightHandler;
 
 import Murmur.InvalidChannelException;
 import Murmur.InvalidSecretException;
@@ -145,7 +146,6 @@ public class ServerManage extends BaseServlet {
 		}
 	}
 	
-	@SuppressWarnings("null")
 	private boolean createGameHandler(int serverId, HandlerType handlerType, int gameChannelId) throws InvalidSecretException, ServerBootedException, InvalidChannelException {
 		IceModel iceM = (IceModel) this.getServletContext().getAttribute(
 				"iceModel");
@@ -168,7 +168,8 @@ public class ServerManage extends BaseServlet {
 			default:
 				Logger.debug(this.getClass(), "Could not create handler for type: "+handlerType);
 		}
-		handler.init(conn, gameChannelId);
+		SqlightHandler sqlH = (SqlightHandler) this.getServletContext().getAttribute("sqlighthandler");
+		handler.init(sqlH.getConnection(), gameChannelId);
 		handler.addToDatabase();
 		sc.getCallback().getHandlers().put(handlerType, handler);
 		return true;
