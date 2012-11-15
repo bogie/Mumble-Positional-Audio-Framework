@@ -23,3 +23,10 @@ Get the Zeroc Ice Eclipse plugin here:
 http://www.zeroc.com/eclipse.html
 
 This should generate the Ice classes for java, then just export MPAF as a runnable jar.
+
+Download
+=================================
+
+Nightly builds of mpaf are available here:
+http://b02.a01.ca:8080/job/mumble%20positional%20audio%20framework/
+Remember, do not replace your mpaf.db, otherwise all your configuration is lost
