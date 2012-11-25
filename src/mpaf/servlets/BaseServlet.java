@@ -37,7 +37,7 @@ import mpaf.auth.PermissionLevel;
 import mpaf.auth.User;
 import mpaf.exceptions.ServiceException;
 import mpaf.json.ResultJson;
-import mpaf.sql.SqlightHandler;
+import mpaf.sql.SqlHandler;
 
 import com.google.gson.Gson;
 
@@ -83,8 +83,8 @@ public abstract class BaseServlet extends HttpServlet {
 	@Override
 	public void init() {
 		this.gson = new Gson();
-		this.conn = ((SqlightHandler) this.getServletContext().getAttribute(
-				"sqlighthandler")).getConnection();
+		this.conn = ((SqlHandler) this.getServletContext().getAttribute(
+				"sqlhandler")).getConnection();
 		loadPrivileges();
 	}
 

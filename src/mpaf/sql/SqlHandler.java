@@ -20,7 +20,12 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import mpaf.Logger;
+
 public class SqlHandler {
+
+	public static int TYPE_MYSQL = 0;
+	public static int TYPE_SQLITE = 1;
 
 	private String dbuser;
 	private String dbpass;
@@ -28,25 +33,39 @@ public class SqlHandler {
 	private String dbname;
 	private String dbport;
 
+	private Connection connection;
+
 	// private LinkedList<Connection> connections = new
 	// LinkedList<Connection>();
 
-	public synchronized Connection getConnection(String dbname)
-			throws SQLException {
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	public SqlHandler(int type) throws ClassNotFoundException, SQLException {
+		if (type == TYPE_SQLITE) {
+			Class.forName("org.sqlite.JDBC");
+			try {
+				this.connection = DriverManager
+						.getConnection("jdbc:sqlite:mpaf.db");
+			} catch (SQLException e) {
+				Logger.fatal(this.getClass(),
+						"Could not open connection to mpaf.db");
+			}
+		} else if (type == TYPE_MYSQL) {
+			try {
+				Class.forName("com.mysql.jdbc.Driver");
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			this.connection = DriverManager.getConnection("jdbc:mysql://"
+					+ this.dbhost + ":" + this.dbport + "/" + this.dbname
+					+ "?autoReconnect=true", this.dbuser, this.dbpass);
 		}
-		Connection conn = DriverManager.getConnection("jdbc:mysql://"
-				+ this.dbhost + ":" + this.dbport + "/" + this.dbname
-				+ "?autoReconnect=true", this.dbuser, this.dbpass);
-		// this.connections.add(conn);
-		return conn;
 	}
 
-	public Connection getConnection() throws SQLException {
+	public synchronized Connection getConnection(String dbname) {
+		return this.connection;
+	}
+
+	public Connection getConnection() {
 		return this.getConnection(this.dbname);
 	}
 

@@ -17,6 +17,7 @@
 package mpaf.servlets;
 
 import java.io.IOException;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,8 +29,7 @@ import mpaf.games.Battlefield3Handler;
 import mpaf.games.DefaultHandler;
 import mpaf.games.HandlerType;
 import mpaf.ice.IceModel;
-import mpaf.sql.SqlightHandler;
-
+import mpaf.sql.SqlHandler;
 import Murmur.InvalidChannelException;
 import Murmur.InvalidSecretException;
 import Murmur.ServerBootedException;
@@ -42,12 +42,12 @@ public class ServerManage extends BaseServlet {
 	public ServerManage() {
 		this.gson = new Gson();
 	}
-	
+
 	@Override
 	protected void doServicePost(HttpServletRequest req,
 			HttpServletResponse resp) throws ServletException, IOException,
 			ServiceException {
-		Logger.debug(this.getClass(),"Got new servermanage POST");
+		Logger.debug(this.getClass(), "Got new servermanage POST");
 		IceModel iceM = (IceModel) this.getServletContext().getAttribute(
 				"iceModel");
 		if (iceM == null) {
@@ -55,46 +55,51 @@ public class ServerManage extends BaseServlet {
 					"Could not find IceModel! Skipping request.");
 			return;
 		}
-		if(req.getParameter("serverId") == null
-				|| req.getParameter("handlerName") == null)
-		{
-			Logger.debug(this.getClass(),"serverId or handlerName is empty");
+		if (req.getParameter("serverId") == null
+				|| req.getParameter("handlerName") == null) {
+			Logger.debug(this.getClass(), "serverId or handlerName is empty");
 			sendError(ErrorCode.HANDLER_INVALID_INFORMATION, resp);
 			return;
 		}
-		
+
 		// generic parameters
 		int serverId = Integer.parseInt(req.getParameter("serverId"));
-		Logger.debug(this.getClass(), "Trying to find handlerType for handlerTypeName: "+req.getParameter("handlerName"));
-		HandlerType handlerType = HandlerType.getByString(req.getParameter("handlerName"));
-		
+		Logger.debug(
+				this.getClass(),
+				"Trying to find handlerType for handlerTypeName: "
+						+ req.getParameter("handlerName"));
+		HandlerType handlerType = HandlerType.getByString(req
+				.getParameter("handlerName"));
+
 		ServerConfig sc = iceM.getServers().get(serverId);
-		DefaultHandler handler = sc.getCallback().getHandlers().get(handlerType);
-		if(handler != null)
-		{
-			// Handler exists, either set new gameChannelId or activate/deactivate handler
-			Logger.debug(this.getClass(),"Handler is "+handler);
+		DefaultHandler handler = sc.getCallback().getHandlers()
+				.get(handlerType);
+		if (handler != null) {
+			// Handler exists, either set new gameChannelId or
+			// activate/deactivate handler
+			Logger.debug(this.getClass(), "Handler is " + handler);
 			try {
-				if(req.getParameter("gameChannelId") != null)
-				{
+				if (req.getParameter("gameChannelId") != null) {
 					// defining new gameChannel
-					int gameChannelId = Integer.parseInt(req.getParameter("gameChannelId"));
-					Logger.debug(this.getClass(),"Set new GameChannel: "+gameChannelId+" for game: "+handlerType);
+					int gameChannelId = Integer.parseInt(req
+							.getParameter("gameChannelId"));
+					Logger.debug(this.getClass(), "Set new GameChannel: "
+							+ gameChannelId + " for game: " + handlerType);
 					handler.setGameChannel(gameChannelId);
 					sendSuccess(resp);
 					return;
-				} else if(req.getParameter("activate") != null)
-				{
+				} else if (req.getParameter("activate") != null) {
 					// de-/activating handler
-					Logger.debug(this.getClass(),"Toggled active status");
-					if(handler.isActive())
+					Logger.debug(this.getClass(), "Toggled active status");
+					if (handler.isActive())
 						handler.deactivate();
 					else
 						handler.activate();
 					sendSuccess(resp);
 					return;
 				} else {
-					Logger.debug(this.getClass(),"What did you expect me to do?");
+					Logger.debug(this.getClass(),
+							"What did you expect me to do?");
 					sendError(ErrorCode.HANDLER_INVALID_INFORMATION, resp);
 					return;
 				}
@@ -114,12 +119,15 @@ public class ServerManage extends BaseServlet {
 				return;
 			}
 		} else {
-			if(req.getParameter("gameChannelId") != null)
-			{
-				int gameChannelId = Integer.parseInt(req.getParameter("gameChannelId"));
-				Logger.debug(this.getClass(),"Trying to create a new GameHandler gamechannelid: "+gameChannelId+" handlername: "+handlerType);
+			if (req.getParameter("gameChannelId") != null) {
+				int gameChannelId = Integer.parseInt(req
+						.getParameter("gameChannelId"));
+				Logger.debug(this.getClass(),
+						"Trying to create a new GameHandler gamechannelid: "
+								+ gameChannelId + " handlername: "
+								+ handlerType);
 				try {
-					if(createGameHandler(serverId, handlerType, gameChannelId))
+					if (createGameHandler(serverId, handlerType, gameChannelId))
 						sendSuccess(resp);
 					else
 						sendError(ErrorCode.HANDLER_INVALID_INFORMATION, resp);
@@ -145,8 +153,10 @@ public class ServerManage extends BaseServlet {
 			}
 		}
 	}
-	
-	private boolean createGameHandler(int serverId, HandlerType handlerType, int gameChannelId) throws InvalidSecretException, ServerBootedException, InvalidChannelException {
+
+	private boolean createGameHandler(int serverId, HandlerType handlerType,
+			int gameChannelId) throws InvalidSecretException,
+			ServerBootedException, InvalidChannelException {
 		IceModel iceM = (IceModel) this.getServletContext().getAttribute(
 				"iceModel");
 		if (iceM == null) {
@@ -157,18 +167,23 @@ public class ServerManage extends BaseServlet {
 		Murmur.ServerPrx server = iceM.getMeta().getServer(serverId);
 		ServerConfig sc = iceM.getServers().get(serverId);
 		DefaultHandler handler = null;
-		switch(handlerType)	{
-			case BATTLEFIELD3:
-				handler = new Battlefield3Handler(server);
-				Logger.debug(this.getClass(),"New BF3Handler is: "+handler);
-				break;
-			case UNKNOWN:
-				Logger.debug(this.getClass(), "Failed to create handler with type: "+handlerType.getCode());
-				return false;
-			default:
-				Logger.debug(this.getClass(), "Could not create handler for type: "+handlerType);
+		switch (handlerType) {
+		case BATTLEFIELD3:
+			handler = new Battlefield3Handler(server);
+			Logger.debug(this.getClass(), "New BF3Handler is: " + handler);
+			break;
+		case UNKNOWN:
+			Logger.debug(
+					this.getClass(),
+					"Failed to create handler with type: "
+							+ handlerType.getCode());
+			return false;
+		default:
+			Logger.debug(this.getClass(), "Could not create handler for type: "
+					+ handlerType);
 		}
-		SqlightHandler sqlH = (SqlightHandler) this.getServletContext().getAttribute("sqlighthandler");
+		SqlHandler sqlH = (SqlHandler) this.getServletContext().getAttribute(
+				"sqlhandler");
 		handler.init(sqlH.getConnection(), gameChannelId);
 		handler.addToDatabase();
 		sc.getCallback().getHandlers().put(handlerType, handler);

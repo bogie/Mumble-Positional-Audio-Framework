@@ -113,5 +113,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry exported="true" kind="lib" path="lib/zeroc-ice-3.4.2/Ice.jar"/>
+	<classpathentry kind="lib" path="lib/mysql/mysql-connector-java-5.1.22-bin.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

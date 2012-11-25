@@ -16,6 +16,8 @@
  ******************************************************************************/
 package mpaf;
 
+import java.sql.SQLException;
+
 import mpaf.ice.IceController;
 import mpaf.ice.IceModel;
 import mpaf.servlets.ChannelList;
@@ -28,7 +30,7 @@ import mpaf.servlets.ServerManage;
 import mpaf.servlets.UserCreate;
 import mpaf.servlets.UserInfo;
 import mpaf.servlets.UserList;
-import mpaf.sql.SqlightHandler;
+import mpaf.sql.SqlHandler;
 
 import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.commons.configuration.ConfigurationException;
@@ -61,17 +63,17 @@ public class Main {
 			e1.printStackTrace();
 		}
 
-		SqlightHandler sqlH = null;
+		SqlHandler sqlH = null;
 		try {
-			sqlH = new SqlightHandler();
-		} catch (ClassNotFoundException e2) {
+			sqlH = new SqlHandler(SqlHandler.TYPE_SQLITE);
+		} catch (ClassNotFoundException | SQLException e2) {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
 		}
-		
-		if(sqlH == null)
+
+		if (sqlH == null)
 			return;
-		
+
 		IceModel iceM = new IceModel(config);
 		IceController iceC = new IceController(iceM, sqlH.getConnection());
 
@@ -93,9 +95,13 @@ public class Main {
 				ServletContextHandler.SESSIONS);
 		servletC.setContextPath("/");
 		try {
-			servletC.setAttribute("sqlighthandler", new SqlightHandler());
+			servletC.setAttribute("sqlhandler", new SqlHandler(
+					SqlHandler.TYPE_SQLITE));
 		} catch (ClassNotFoundException e1) {
 			System.out.println("FATAL: Could not connect to mpaf.db database!");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		servletC.setAttribute("iceController", iceC);
 		servletC.setAttribute("iceModel", iceM);
