@@ -84,7 +84,7 @@ public abstract class BaseServlet extends HttpServlet {
 	public void init() {
 		this.gson = new Gson();
 		this.conn = ((SqlHandler) this.getServletContext().getAttribute(
-				"sqlhandler")).getConnection();
+				"sqlighthandler")).getConnection();
 		loadPrivileges();
 	}
 

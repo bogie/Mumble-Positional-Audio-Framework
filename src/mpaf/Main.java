@@ -65,15 +65,16 @@ public class Main {
 
 		SqlHandler sqlH = null;
 		try {
-			sqlH = new SqlHandler(SqlHandler.TYPE_SQLITE);
-		} catch (ClassNotFoundException | SQLException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		}
-
-		if (sqlH == null)
+			sqlH = new SqlHandler(config);
+		} catch (ClassNotFoundException e2) {
+			Logger.fatal(config.getClass(), "Could not find appropriate JDBC driver for db type: "+config.getString("db.type"));
 			return;
-
+		} catch (SQLException e) {
+			Logger.fatal(config.getClass(), "Could not open database: "+config.getString("db.name")
+					+" please check your database configuration.");
+			return;
+		}
+		
 		IceModel iceM = new IceModel(config);
 		IceController iceC = new IceController(iceM, sqlH.getConnection());
 
@@ -86,49 +87,51 @@ public class Main {
 		// etc.)
 		ShutdownThread shutdown = new ShutdownThread(iceC);
 		Runtime.getRuntime().addShutdownHook(new Thread(shutdown));
-
-		SocketConnector connector = new SocketConnector();
-		connector.setPort(config.getInt("jetty.ports.http", 10001));
-		server.setConnectors(new Connector[] { connector });
-
-		ServletContextHandler servletC = new ServletContextHandler(
-				ServletContextHandler.SESSIONS);
-		servletC.setContextPath("/");
-		try {
-			servletC.setAttribute("sqlhandler", new SqlHandler(
-					SqlHandler.TYPE_SQLITE));
-		} catch (ClassNotFoundException e1) {
-			System.out.println("FATAL: Could not connect to mpaf.db database!");
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		servletC.setAttribute("iceController", iceC);
-		servletC.setAttribute("iceModel", iceM);
-		// To add a servlet:
-		ServletHolder holder = new ServletHolder(new DefaultCacheServlet());
-		holder.setInitParameter("cacheControl", "max-age=3600,public");
-		holder.setInitParameter("resourceBase", "web");
-		servletC.addServlet(holder, "/");
-		servletC.addServlet(new ServletHolder(new ServerList()), "/serverlist");
-		servletC.addServlet(new ServletHolder(new ChannelList()),
-				"/channellist");
-		servletC.addServlet(new ServletHolder(new HandlerList()),
-				"/handlerlist");
-		servletC.addServlet(new ServletHolder(new ServerManage()),
-				"/servermanage");
-		servletC.addServlet(new ServletHolder(new Login()), "/login");
-		servletC.addServlet(new ServletHolder(new Logout()), "/logout");
-		servletC.addServlet(new ServletHolder(new UserCreate()), "/usercreate");
-		servletC.addServlet(new ServletHolder(new UserInfo()), "/userinfo");
-		servletC.addServlet(new ServletHolder(new UserList()), "/userlist");
-
-		server.setHandler(servletC);
-		try {
-			server.start();
-			server.join();
-		} catch (Exception e) {
-			e.printStackTrace();
+		
+		if(config.getBoolean("jetty.enabled")) {
+			SocketConnector connector = new SocketConnector();
+			connector.setPort(config.getInt("jetty.ports.http", 10001));
+			server.setConnectors(new Connector[] { connector });
+	
+			ServletContextHandler servletC = new ServletContextHandler(
+					ServletContextHandler.SESSIONS);
+			servletC.setContextPath("/");
+			try {
+				servletC.setAttribute("sqlighthandler", new SqlHandler(config));
+			} catch (ClassNotFoundException e1) {
+				System.out.println("FATAL: Could not connect to mpaf.db database!");
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return;
+			}
+			servletC.setAttribute("iceController", iceC);
+			servletC.setAttribute("iceModel", iceM);
+			// To add a servlet:
+			ServletHolder holder = new ServletHolder(new DefaultCacheServlet());
+			holder.setInitParameter("cacheControl", "max-age=3600,public");
+			holder.setInitParameter("resourceBase", "web");
+			servletC.addServlet(holder, "/");
+			servletC.addServlet(new ServletHolder(new ServerList()), "/serverlist");
+			servletC.addServlet(new ServletHolder(new ChannelList()),
+					"/channellist");
+			servletC.addServlet(new ServletHolder(new HandlerList()),
+					"/handlerlist");
+			servletC.addServlet(new ServletHolder(new ServerManage()),
+					"/servermanage");
+			servletC.addServlet(new ServletHolder(new Login()), "/login");
+			servletC.addServlet(new ServletHolder(new Logout()), "/logout");
+			servletC.addServlet(new ServletHolder(new UserCreate()), "/usercreate");
+			servletC.addServlet(new ServletHolder(new UserInfo()), "/userinfo");
+			servletC.addServlet(new ServletHolder(new UserList()), "/userlist");
+	
+			server.setHandler(servletC);
+			try {
+				server.start();
+				server.join();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 
 	}

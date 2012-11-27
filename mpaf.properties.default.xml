@@ -16,6 +16,13 @@
   along with MPAF.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <defaults>
+    <db>
+        <type>sqlite</type>
+        <host></host>
+        <name>mpaf.db</name>
+        <user></user>
+        <password></password>
+    </db>
     <ice>
         <secret></secret>
         <hosts>
@@ -25,6 +32,7 @@
         <port>6502</port>
     </ice>
     <jetty>
+        <enabled>true</enabled>
         <ports>
             <http>10000</http>
         </ports>
