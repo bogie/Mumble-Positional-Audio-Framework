@@ -62,7 +62,6 @@ public class SqlHandler {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			System.out.println("Opening conneciton to: "+this.dbhost+":"+this.dbport+"/"+this.dbname+"?autoReconnect=true"+" with user: "+this.dbuser+" pass "+this.dbpass);
 			this.connection = DriverManager.getConnection("jdbc:mysql://"
 					+ this.dbhost + ":" + this.dbport + "/" + this.dbname
 					+ "?autoReconnect=true", this.dbuser, this.dbpass);

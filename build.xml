@@ -6,7 +6,7 @@
         <jar destfile="build/mpaf.jar">
             <manifest>
                 <attribute name="Main-Class" value="mpaf.Main"/>
-                <attribute name="Class-Path" value=". mpaf_lib/jetty-server-8.1.4.v20120524.jar mpaf_lib/jetty-util-8.1.4.v20120524.jar mpaf_lib/jetty-websocket-8.1.4.v20120524.jar mpaf_lib/servlet-api-3.0.jar mpaf_lib/com.sun.el-2.2.0.v201108011116.jar mpaf_lib/javax.el-2.2.0.v201108011116.jar mpaf_lib/javax.servlet.jsp-2.2.0.v201112011158.jar mpaf_lib/javax.servlet.jsp.jstl-1.2.0.v201105211821.jar mpaf_lib/org.apache.jasper.glassfish-2.2.2.v201112011158.jar mpaf_lib/org.apache.taglibs.standard.glassfish-1.2.0.v201112081803.jar mpaf_lib/org.eclipse.jdt.core-3.7.1.jar mpaf_lib/jetty-http-8.1.4.v20120524.jar mpaf_lib/jetty-io-8.1.4.v20120524.jar mpaf_lib/jetty-continuation-8.1.4.v20120524.jar mpaf_lib/jetty-webapp-8.1.4.v20120524.jar mpaf_lib/jetty-servlet-8.1.4.v20120524.jar mpaf_lib/jetty-security-8.1.4.v20120524.jar mpaf_lib/jetty-xml-8.1.4.v20120524.jar mpaf_lib/Ice.jar mpaf_lib/gson-2.2.1.jar mpaf_lib/commons-configuration-1.8.jar mpaf_lib/commons-collections-3.2.1.jar mpaf_lib/commons-logging-1.1.1.jar mpaf_lib/commons-lang-2.6.jar mpaf_lib/sqlite-jdbc-3.7.2.jar"/>
+                <attribute name="Class-Path" value=". mpaf_lib/jetty-server-8.1.4.v20120524.jar mpaf_lib/jetty-util-8.1.4.v20120524.jar mpaf_lib/jetty-websocket-8.1.4.v20120524.jar mpaf_lib/servlet-api-3.0.jar mpaf_lib/com.sun.el-2.2.0.v201108011116.jar mpaf_lib/javax.el-2.2.0.v201108011116.jar mpaf_lib/javax.servlet.jsp-2.2.0.v201112011158.jar mpaf_lib/javax.servlet.jsp.jstl-1.2.0.v201105211821.jar mpaf_lib/org.apache.jasper.glassfish-2.2.2.v201112011158.jar mpaf_lib/org.apache.taglibs.standard.glassfish-1.2.0.v201112081803.jar mpaf_lib/org.eclipse.jdt.core-3.7.1.jar mpaf_lib/jetty-http-8.1.4.v20120524.jar mpaf_lib/jetty-io-8.1.4.v20120524.jar mpaf_lib/jetty-continuation-8.1.4.v20120524.jar mpaf_lib/jetty-webapp-8.1.4.v20120524.jar mpaf_lib/jetty-servlet-8.1.4.v20120524.jar mpaf_lib/jetty-security-8.1.4.v20120524.jar mpaf_lib/jetty-xml-8.1.4.v20120524.jar mpaf_lib/Ice.jar mpaf_lib/gson-2.2.1.jar mpaf_lib/commons-configuration-1.8.jar mpaf_lib/commons-collections-3.2.1.jar mpaf_lib/commons-logging-1.1.1.jar mpaf_lib/commons-lang-2.6.jar mpaf_lib/sqlite-jdbc-3.7.2.jar mpaf_lib/mysql-connector-java-5.1.22-bin.jar"/>
             </manifest>
             <fileset dir="bin"/>
         </jar>
@@ -39,6 +39,7 @@
         <copy file="lib/jetty/jetty-servlet-8.1.4.v20120524.jar" todir="build/mpaf_lib"/>
         <copy file="lib/jetty/jetty-security-8.1.4.v20120524.jar" todir="build/mpaf_lib"/>
         <copy file="lib/jetty/jetty-xml-8.1.4.v20120524.jar" todir="build/mpaf_lib"/>
+    	<copy file="lib/mysql/mysql-connector-java-5.1.22-bin.jar" todir="build/mpaf_lib"/>
         <copy file="lib/zeroc-ice-3.4.2/Ice.jar" todir="build/mpaf_lib"/>
         <copy file="lib/gson/gson-2.2.1.jar" todir="build/mpaf_lib"/>
         <copy file="lib/commons-configuration-1.8/commons-configuration-1.8.jar" todir="build/mpaf_lib"/>

@@ -71,7 +71,7 @@ public class Main {
 		sqlH.setDbname(config.getString("db.name"));
 		sqlH.setDbuser(config.getString("db.user"));
 		sqlH.setDbpass(config.getString("db.password"));
-		Logger.debug(SqlHandler.class, "Db connection: "+config.getString("db.type")+config.getString("db.host")+config.getString("db.port")+config.getString("db.password"));
+
 		IceModel iceM = new IceModel(config);
 		IceController iceC;
 		try {
