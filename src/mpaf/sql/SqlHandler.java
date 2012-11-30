@@ -27,6 +27,7 @@ public class SqlHandler {
 	public static int TYPE_MYSQL = 0;
 	public static int TYPE_SQLITE = 1;
 
+	private int    dbtype;
 	private String dbuser;
 	private String dbpass;
 	private String dbhost;
@@ -35,38 +36,38 @@ public class SqlHandler {
 
 	private Connection connection;
 
-	// private LinkedList<Connection> connections = new
-	// LinkedList<Connection>();
+	//private LinkedList<Connection> connections = new LinkedList<Connection>();
 
-	public SqlHandler(int type) throws ClassNotFoundException, SQLException {
-		if (type == TYPE_SQLITE) {
-			Class.forName("org.sqlite.JDBC");
-			try {
-				this.connection = DriverManager
-						.getConnection("jdbc:sqlite:mpaf.db");
-			} catch (SQLException e) {
-				Logger.fatal(this.getClass(),
-						"Could not open connection to mpaf.db");
-			}
-		} else if (type == TYPE_MYSQL) {
-			try {
-				Class.forName("com.mysql.jdbc.Driver");
-			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			this.connection = DriverManager.getConnection("jdbc:mysql://"
-					+ this.dbhost + ":" + this.dbport + "/" + this.dbname
-					+ "?autoReconnect=true", this.dbuser, this.dbpass);
-		}
+	public SqlHandler() {
 	}
 
 	public synchronized Connection getConnection(String dbname) {
 		return this.connection;
 	}
 
-	public Connection getConnection() {
-		return this.getConnection(this.dbname);
+	public Connection getConnection() throws SQLException, ClassNotFoundException {
+		if (dbtype == TYPE_SQLITE) {
+			Class.forName("org.sqlite.JDBC");
+			try {
+				this.connection = DriverManager
+						.getConnection("jdbc:sqlite:"+this.dbname);
+			} catch (SQLException e) {
+				Logger.fatal(this.getClass(),
+						"Could not open connection to "+this.dbname);
+			}
+		} else if (dbtype == TYPE_MYSQL) {
+			try {
+				Class.forName("com.mysql.jdbc.Driver");
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			System.out.println("Opening conneciton to: "+this.dbhost+":"+this.dbport+"/"+this.dbname+"?autoReconnect=true"+" with user: "+this.dbuser+" pass "+this.dbpass);
+			this.connection = DriverManager.getConnection("jdbc:mysql://"
+					+ this.dbhost + ":" + this.dbport + "/" + this.dbname
+					+ "?autoReconnect=true", this.dbuser, this.dbpass);
+		}
+		return this.connection;
 	}
 
 	public String getDbuser() {
@@ -107,5 +108,20 @@ public class SqlHandler {
 
 	public void setDbport(String dbport) {
 		this.dbport = dbport;
+	}
+	
+	public int getDbType() {
+		return dbtype;
+	}
+
+	public void setDbtype(int dbtype) {
+		this.dbtype = dbtype;
+	}
+	
+	public void setDbtype(String dbtype) {
+		if(dbtype.equals("sqlite"))
+			this.dbtype = TYPE_SQLITE;
+		else if(dbtype.equals("mysql"))
+			this.dbtype = TYPE_MYSQL;
 	}
 }

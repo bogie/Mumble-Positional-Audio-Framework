@@ -83,8 +83,16 @@ public abstract class BaseServlet extends HttpServlet {
 	@Override
 	public void init() {
 		this.gson = new Gson();
-		this.conn = ((SqlHandler) this.getServletContext().getAttribute(
-				"sqlighthandler")).getConnection();
+		try {
+			this.conn = ((SqlHandler) this.getServletContext().getAttribute(
+					"sqlhandler")).getConnection();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		loadPrivileges();
 	}
 

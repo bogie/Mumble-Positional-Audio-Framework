@@ -64,19 +64,27 @@ public class Main {
 		}
 
 		SqlHandler sqlH = null;
+		sqlH = new SqlHandler();
+		sqlH.setDbtype(config.getString("db.type"));
+		sqlH.setDbhost(config.getString("db.host"));
+		sqlH.setDbport(config.getString("db.port"));
+		sqlH.setDbname(config.getString("db.name"));
+		sqlH.setDbuser(config.getString("db.user"));
+		sqlH.setDbpass(config.getString("db.password"));
+		Logger.debug(SqlHandler.class, "Db connection: "+config.getString("db.type")+config.getString("db.host")+config.getString("db.port")+config.getString("db.password"));
+		IceModel iceM = new IceModel(config);
+		IceController iceC;
 		try {
-			sqlH = new SqlHandler(config);
-		} catch (ClassNotFoundException e2) {
-			Logger.fatal(config.getClass(), "Could not find appropriate JDBC driver for db type: "+config.getString("db.type"));
+			iceC = new IceController(iceM, sqlH.getConnection());
+		} catch (ClassNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 			return;
-		} catch (SQLException e) {
-			Logger.fatal(config.getClass(), "Could not open database: "+config.getString("db.name")
-					+" please check your database configuration.");
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 			return;
 		}
-		
-		IceModel iceM = new IceModel(config);
-		IceController iceC = new IceController(iceM, sqlH.getConnection());
 
 		Server server = new Server();
 
@@ -96,15 +104,7 @@ public class Main {
 			ServletContextHandler servletC = new ServletContextHandler(
 					ServletContextHandler.SESSIONS);
 			servletC.setContextPath("/");
-			try {
-				servletC.setAttribute("sqlighthandler", new SqlHandler(config));
-			} catch (ClassNotFoundException e1) {
-				System.out.println("FATAL: Could not connect to mpaf.db database!");
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				return;
-			}
+			servletC.setAttribute("sqlhandler", sqlH);
 			servletC.setAttribute("iceController", iceC);
 			servletC.setAttribute("iceModel", iceM);
 			// To add a servlet:
