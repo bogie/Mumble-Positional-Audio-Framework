@@ -65,10 +65,10 @@ public class Main {
 
 		SqlHandler sqlH = null;
 		sqlH = new SqlHandler();
-		sqlH.setDbtype(config.getString("db.type"));
-		sqlH.setDbhost(config.getString("db.host"));
-		sqlH.setDbport(config.getString("db.port"));
-		sqlH.setDbname(config.getString("db.name"));
+		sqlH.setDbtype(config.getString("db.type","sqlite"));
+		sqlH.setDbhost(config.getString("db.host","127.0.0.1"));
+		sqlH.setDbport(config.getString("db.port","3306"));
+		sqlH.setDbname(config.getString("db.name","mpaf.db"));
 		sqlH.setDbuser(config.getString("db.user"));
 		sqlH.setDbpass(config.getString("db.password"));
 

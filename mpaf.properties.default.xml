@@ -19,6 +19,7 @@
     <db>
         <type>sqlite</type>
         <host></host>
+		<port></port>
         <name>mpaf.db</name>
         <user></user>
         <password></password>
